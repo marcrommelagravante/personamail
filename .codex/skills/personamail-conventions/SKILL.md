@@ -32,3 +32,13 @@ description: Use this skill when writing or editing any backend route, service, 
 3. Add a route to `backend/routers/email.py`.
 4. Add a frontend page under `frontend/app/<feature-name>/page.tsx`
    following the existing generate/rewrite page pattern.
+
+## Brand & Design
+Before creating or modifying any frontend page or component, read:
+- docs/brand/Brand_Guidelines.md — colors, typography, voice, tone
+- docs/brand/AI_Agent_Design_Checklist.md — mandatory pre-flight checklist
+
+Key locked values:
+- Primary: #0F172A | Accent: #7CE3FF | Background: #F8FAFC | White: #FFFFFF
+- Font: Geist (only)
+- Use "Compose/Improve/Review" language — never "AI Generator/AI Rewrite/AI Grammar"
