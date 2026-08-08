@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import { API_URL } from "../lib/api";
+
+const API = API_URL;
 
 export default function GrammarCheckPage() {
   const [text, setText] = useState("");
@@ -9,7 +12,6 @@ export default function GrammarCheckPage() {
   const [result, setResult] = useState<{ corrected_text: string; changes_summary: string } | null>(null);
   const [error, setError] = useState("");
 
-  const API = "http://localhost:8000";
 
   const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +30,7 @@ export default function GrammarCheckPage() {
       if (!res.ok) throw new Error("Failed to check grammar");
       const data = await res.json();
       setResult(data);
-    } catch (err) {
+    } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -43,10 +45,12 @@ export default function GrammarCheckPage() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-2xl p-8">
-        <h1 className="mb-6 text-2xl font-bold">Grammar Checker</h1>
+      <main className="mx-auto max-w-2xl px-5 py-10 sm:px-8">
+        <p className="text-sm font-medium text-sky-700">Clarity, without losing your voice</p>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight">Review</h1>
+        <p className="mt-2 mb-8 text-slate-600">Check spelling, grammar, and clarity before you send.</p>
 
-        <form onSubmit={handleCheck} className="flex flex-col gap-4">
+        <form onSubmit={handleCheck} className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <div>
             <label className="mb-1 block text-sm font-medium">
               Text to check
@@ -57,28 +61,28 @@ export default function GrammarCheckPage() {
               required
               rows={6}
               placeholder="Paste any text here to check grammar and clarity..."
-              className="w-full rounded border p-2"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+            className="rounded-lg bg-[#0F172A] px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Checking..." : "Check Grammar"}
+            {loading ? "Reviewing your message…" : "Review message"}
           </button>
         </form>
 
-        {error && <p className="mt-4 text-red-600">{error}</p>}
+        {error && <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</p>}
 
         {result && (
-          <div className="mt-8 rounded-lg border border-gray-300 p-4">
+          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h2 className="font-semibold">Corrected Text</h2>
+              <h2 className="font-semibold">Reviewed text</h2>
               <button
                 onClick={copyToClipboard}
-                className="rounded bg-gray-200 px-3 py-1 text-sm hover:bg-gray-300"
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium hover:bg-slate-50"
               >
                 Copy
               </button>
@@ -86,7 +90,7 @@ export default function GrammarCheckPage() {
             <p className="mb-4 whitespace-pre-wrap text-gray-700">
               {result.corrected_text}
             </p>
-            <p className="text-sm italic text-gray-500">
+            <p className="text-sm italic text-slate-500">
               {result.changes_summary}
             </p>
           </div>

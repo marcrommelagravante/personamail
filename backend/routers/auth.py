@@ -6,6 +6,7 @@ from core.config import settings
 from core.security import create_access_token, decode_access_token
 from models.user import User
 import httpx, uuid
+from urllib.parse import urlencode
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -17,12 +18,12 @@ GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 def google_login():
     params = {
         "client_id": settings.GOOGLE_CLIENT_ID,
-        "redirect_uri": "http://localhost:8000/auth/google/callback",
+        "redirect_uri": f"{settings.BACKEND_URL}/auth/google/callback",
         "response_type": "code",
         "scope": "openid email profile",
         "access_type": "offline",
     }
-    query = "&".join(f"{k}={v}" for k, v in params.items())
+    query = urlencode(params)
     return RedirectResponse(f"{GOOGLE_AUTH_URL}?{query}")
 
 @router.get("/google/callback")
@@ -32,12 +33,10 @@ async def google_callback(code: str, db: Session = Depends(get_db)):
             "code": code,
             "client_id": settings.GOOGLE_CLIENT_ID,
             "client_secret": settings.GOOGLE_CLIENT_SECRET,
-            "redirect_uri": "http://localhost:8000/auth/google/callback",
+            "redirect_uri": f"{settings.BACKEND_URL}/auth/google/callback",
             "grant_type": "authorization_code",
         })
         tokens = token_res.json()
-        print("GOOGLE TOKEN RESPONSE:", tokens)  # DEBUG LINE
-
         if "access_token" not in tokens:
             raise HTTPException(status_code=400, detail=f"Google token error: {tokens}")
 
@@ -63,14 +62,14 @@ async def google_callback(code: str, db: Session = Depends(get_db)):
 
     response = RedirectResponse(f"{settings.FRONTEND_URL}?login=success")
     response.set_cookie(
-    key="access_token",
-    value=jwt_token,
-    httponly=True,
-    secure=False,
-    samesite="lax",
-    max_age=60 * 60 * 24 * 7,
-    path="/",
-)
+        key="access_token",
+        value=jwt_token,
+        httponly=True,
+        secure=settings.is_production,
+        samesite="none" if settings.is_production else "lax",
+        max_age=60 * 60 * 24 * 7,
+        path="/",
+    )
     return response
 
 @router.get("/me")
