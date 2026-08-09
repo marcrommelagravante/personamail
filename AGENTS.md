@@ -84,7 +84,50 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Verify the repaired backend and resolve the configuration-name collision
 - [x] Add and baseline Alembic migrations in Neon (`20260809_0001`)
 - [x] Add CI quality gates and formal architecture, database, and API documentation
+- [x] Complete pre-launch UI/UX, backend, prompt, and authentication audit
+- [x] Redesign shared navigation, Home dashboard, and Compose experience
+- [ ] Apply the same UI/UX system to Contacts, Templates, History, Settings, Improve, and Review
+- [ ] Implement the prioritized backend and prompt improvements from the pre-launch audit
 - [ ] Deploy the frontend to Vercel and backend to Render, then run production verification
+
+## Active UI/UX Polish Handoff
+
+### Completed design work
+
+- `frontend/app/components/Navbar.tsx` is now the responsive shared app shell.
+  It uses a desktop navigation, mobile menu, Lucide icons, and keeps the primary
+  navigation focused on Compose, Contacts, Templates, History, and Settings.
+- `frontend/app/page.tsx` is a dashboard with one primary Compose action and
+  contextual Improve/Review actions.
+- `frontend/app/generate/page.tsx` is the reference implementation for the
+  new workflow layout: visible labels, a focused primary action, contextual
+  information, loading/error/empty states, and copy-success feedback.
+- `lucide-react` is installed in `frontend/package.json`. Use Lucide icons
+  only; never add emoji or a second icon library.
+
+### Required design rules
+
+- Read `docs/brand/AI_Agent_Design_Checklist.md` and use the `design-checklist`
+  skill before changing frontend pages or components.
+- Use Geist and only these brand colors: primary `#0F172A`, accent `#7CE3FF`,
+  background `#F8FAFC`, and white `#FFFFFF` surfaces.
+- Use Compose, Improve, and Review language. Never use “AI Generator”, “AI
+  Rewrite”, “AI Magic”, robot imagery, sparkles, gradients, or generic chatbot UI.
+- Give every form visible labels and every async action loading, error, and
+  success/empty feedback. Keep desktop layouts spacious and simplify navigation
+  for mobile.
+
+### UI validation
+
+Run from `frontend/` after each UI task:
+
+```bash
+npm run lint
+npm run build
+```
+
+Update the **Current Status** checklist in this file whenever a task is
+completed, including what was verified and the next active task.
 
 ## Database Migrations
 
