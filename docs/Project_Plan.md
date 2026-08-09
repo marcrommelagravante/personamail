@@ -146,17 +146,14 @@ personamail/
 
 1. [x] Repository structure
 2. [x] README.md + AGENTS.md
-3. [ ] Architecture documentation (diagram exists here; formal doc not written)
-4. [ ] Database design doc (schema exists in code; not formally documented)
-5. [ ] API specification (auto-generated via FastAPI `/docs`; no standalone spec doc)
+3. [x] Architecture documentation (`docs/Architecture.md`)
+4. [x] Database design documentation (`docs/Database_Design.md`)
+5. [x] API specification (`docs/API_Specification.md` and FastAPI `/docs`)
 6. [x] Feature implementation (V1 complete)
-7. [ ] CI/CD (not yet set up)
+7. [x] CI quality gates (`.github/workflows/ci.yml`)
 
 ## Current Priorities (as of this plan version)
 
-1. Apply brand guidelines to the UI (colors, Geist font, Compose/Improve/Review renaming)
-2. Add Navbar to Home and Contacts pages
-3. Deploy: Vercel (frontend) + Render (backend)
-4. Add Templates, History, Settings pages (per brand nav target)
-5. Formal docs: architecture, database design, API spec
-6. CI/CD
+1. Deploy: Vercel (frontend) + Render (backend)
+2. End-to-end production verification
+3. Consider persistent/distributed rate limiting before scaling beyond one API instance

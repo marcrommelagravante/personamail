@@ -1,0 +1,9 @@
+alembic
+fastapi
+groq
+httpx
+psycopg2-binary
+pydantic-settings
+python-jose[cryptography]
+SQLAlchemy
+uvicorn[standard]

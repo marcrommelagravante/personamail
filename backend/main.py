@@ -1,13 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
-from core.db import Base, engine
 from models import activity, contact, template, user, user_preferences
 from routers import auth, contacts, email, history, settings as settings_router, templates
 
 app = FastAPI(title="PersonaMail API", version="1.0.0")
-
-Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
