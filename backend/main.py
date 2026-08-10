@@ -24,3 +24,8 @@ app.include_router(settings_router.router)
 @app.get("/")
 def root():
     return {"message": "PersonaMail API is running"}
+
+@app.get("/api/health")
+def health_check():
+    return {"status": "ok", "service": "personamail-api"}
+
