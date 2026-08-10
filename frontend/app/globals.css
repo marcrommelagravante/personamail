@@ -14,6 +14,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -25,8 +29,8 @@ a,
 input,
 select,
 textarea {
-  transition-duration: 200ms;
-  transition-timing-function: ease-out;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes fadeInUp {
@@ -60,6 +64,19 @@ textarea {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.animate-pulse {
+  animation: skeletonPulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
 }
 
 .animate-fade-in-up {

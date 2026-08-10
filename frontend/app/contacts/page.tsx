@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { API_URL } from "../lib/api";
 import {
   Plus,
@@ -162,7 +163,7 @@ export default function ContactsPage() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-4xl px-5 py-8 sm:px-8 sm:py-12">
+      <main className="mx-auto w-full flex-1 max-w-4xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="animate-fade-in-up mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
@@ -363,9 +364,10 @@ export default function ContactsPage() {
         )}
 
         {loading ? (
-          <div className="flex items-center justify-center py-16 text-slate-500">
-            <Loader2 className="h-5 w-5 animate-spin mr-2" />
-            <span className="text-sm">Loading contacts…</span>
+          <div className="space-y-3" aria-label="Loading contacts">
+            <div className="h-20 animate-pulse rounded-2xl bg-slate-200" />
+            <div className="h-20 animate-pulse rounded-2xl bg-slate-200" />
+            <div className="h-20 animate-pulse rounded-2xl bg-slate-200" />
           </div>
         ) : contacts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
@@ -437,6 +439,7 @@ export default function ContactsPage() {
           </div>
         )}
       </main>
+      <Footer />
     </>
   );
 }

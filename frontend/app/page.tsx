@@ -4,16 +4,22 @@ import Link from "next/link";
 import {
   ArrowRight,
   BookOpen,
+  Check,
   Clock,
+  Copy,
   FilePenLine,
   Mail,
+  MailCheck,
   PenLine,
   Plus,
+  SlidersHorizontal,
   UserPlus,
   Users,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import { API_URL } from "./lib/api";
 
 import LandingPage from "./components/LandingPage";
@@ -39,19 +45,22 @@ const quickActions = [
   {
     href: "/generate",
     title: "Compose",
-    description: "Start a new message with the right context.",
+    description: "Start a new message with adaptive relationship context.",
+    hint: "Adapts tone and structure automatically per contact.",
     icon: PenLine,
   },
   {
     href: "/rewrite",
     title: "Improve",
-    description: "Refine a draft while preserving your voice.",
+    description: "Refine a draft while preserving your original voice.",
+    hint: "Preserves key facts while upgrading formality.",
     icon: FilePenLine,
   },
   {
     href: "/grammar-check",
     title: "Review",
-    description: "Check clarity and correctness before sending.",
+    description: "Check clarity, spelling, and correctness before sending.",
+    hint: "Verifies grammar & readability without losing voice.",
     icon: BookOpen,
   },
 ];
@@ -87,6 +96,8 @@ export default function Home() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [previewItem, setPreviewItem] = useState<ActivityItem | null>(null);
+  const [copiedPreview, setCopiedPreview] = useState(false);
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -126,17 +137,32 @@ export default function Home() {
     void loadDashboard();
   }, []);
 
+  const copyPreviewOutput = (item: ActivityItem) => {
+    const textToCopy = item.subject
+      ? `Subject: ${item.subject}\n\n${item.output_text}`
+      : item.output_text;
+    void navigator.clipboard.writeText(textToCopy);
+    setCopiedPreview(true);
+    setTimeout(() => setCopiedPreview(false), 2000);
+  };
+
   if (loading) {
     return (
       <>
         <Navbar />
         <main className="mx-auto min-h-[calc(100vh-64px)] max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
           <div className="space-y-6" aria-label="Loading workspace">
-            <div className="h-8 w-56 animate-pulse rounded bg-slate-200" />
-            <div className="h-32 rounded-2xl bg-slate-200" />
-            <div className="h-48 rounded-2xl bg-slate-200" />
+            <div className="h-8 w-56 animate-pulse rounded-xl bg-slate-200" />
+            <div className="h-28 animate-pulse rounded-2xl bg-slate-200" />
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="h-44 animate-pulse rounded-2xl bg-slate-200" />
+              <div className="h-44 animate-pulse rounded-2xl bg-slate-200" />
+              <div className="h-44 animate-pulse rounded-2xl bg-slate-200" />
+            </div>
+            <div className="h-48 animate-pulse rounded-2xl bg-slate-200" />
           </div>
         </main>
+        <Footer />
       </>
     );
   }
@@ -150,9 +176,9 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto min-h-[calc(100vh-64px)] max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
+      <main className="mx-auto w-full flex-1 max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="space-y-8">
-          {/* Step 1: Collapsed Hero Banner */}
+          {/* Hero Banner */}
           <section className="animate-fade-in-up flex flex-col justify-between gap-4 rounded-2xl bg-primary px-6 py-6 text-white shadow-xs sm:flex-row sm:items-center sm:px-8">
             <div>
               <p className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-sky-200">
@@ -165,11 +191,58 @@ export default function Home() {
             </div>
             <Link
               href="/generate"
-              className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-primary transition-all hover:-translate-y-0.5 hover:bg-sky-200 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-primary transition-all duration-150 hover:-translate-y-0.5 hover:bg-sky-200 hover:shadow-sm active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
-              <PenLine className="h-4 w-4" aria-hidden="true" /> Compose a
-              message
+              <PenLine className="h-4 w-4" aria-hidden="true" /> Compose a message
             </Link>
+          </section>
+
+          {/* Workspace Summary Metric Strip */}
+          <section
+            aria-label="Workspace metrics"
+            className="animate-fade-in-up animate-stagger-1 grid gap-4 sm:grid-cols-3"
+          >
+            <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-900">
+                <Users className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-2xl font-semibold tracking-tight text-primary">
+                  {contacts.length}
+                </p>
+                <p className="text-xs font-medium text-slate-500">
+                  Saved Contact Profiles
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-900">
+                <MailCheck className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-2xl font-semibold tracking-tight text-primary">
+                  {activity.length}
+                </p>
+                <p className="text-xs font-medium text-slate-500">
+                  Recent Messages Handled
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-900">
+                <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-2xl font-semibold tracking-tight text-primary capitalize">
+                  {contacts[0]?.tone || "Adaptive"}
+                </p>
+                <p className="text-xs font-medium text-slate-500">
+                  Primary Tone Profile
+                </p>
+              </div>
+            </div>
           </section>
 
           {/* Contextual Nudge for new users without contacts */}
@@ -195,7 +268,7 @@ export default function Home() {
           )}
 
           {/* Quick Action Grid */}
-          <section aria-labelledby="quick-actions-heading" className="animate-fade-in-up animate-stagger-1">
+          <section aria-labelledby="quick-actions-heading" className="animate-fade-in-up animate-stagger-2">
             <h2 id="quick-actions-heading" className="sr-only">
               Quick Actions
             </h2>
@@ -206,9 +279,9 @@ export default function Home() {
                   <Link
                     key={action.href}
                     href={action.href}
-                    className="group cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-xs transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+                    className="group cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
                   >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-primary">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-primary transition-transform group-hover:scale-105">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </span>
                     <h3 className="mt-4 font-semibold text-primary">
@@ -217,9 +290,12 @@ export default function Home() {
                     <p className="mt-1.5 text-sm leading-6 text-slate-600">
                       {action.description}
                     </p>
+                    <p className="mt-2 text-xs text-sky-700 font-medium">
+                      {action.hint}
+                    </p>
                     <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-slate-700 group-hover:text-primary">
                       Open {action.title}{" "}
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                     </span>
                   </Link>
                 );
@@ -227,9 +303,9 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Step 2: Recent Contacts Strip (if any contacts exist) */}
+          {/* Recent Contacts Strip */}
           {contacts.length > 0 && (
-            <section aria-labelledby="contacts-heading">
+            <section aria-labelledby="contacts-heading" className="animate-fade-in-up animate-stagger-3">
               <div className="mb-4 flex items-center justify-between">
                 <h2
                   id="contacts-heading"
@@ -249,24 +325,25 @@ export default function Home() {
                   <Link
                     key={contact.id}
                     href={`/generate?contact_id=${contact.id}`}
-                    className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-xs transition-colors hover:border-slate-300 hover:bg-slate-50"
+                    title={`Compose email for ${contact.name}`}
+                    className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-xs transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:shadow-xs active:scale-[0.98]"
                   >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-700">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-700 transition-colors group-hover:bg-sky-100 group-hover:text-sky-900">
                       {getInitials(contact.name)}
                     </span>
                     <div>
-                      <p className="text-sm font-semibold text-primary">
+                      <p className="text-sm font-semibold text-primary group-hover:text-sky-900">
                         {contact.name}
                       </p>
                       <p className="text-xs text-slate-500">
-                        {contact.relationship}
+                        {contact.relationship} · <span className="capitalize">{contact.tone}</span>
                       </p>
                     </div>
                   </Link>
                 ))}
                 <Link
                   href="/contacts"
-                  className="flex items-center gap-2 rounded-xl border border-dashed border-slate-300 bg-white px-4 py-2.5 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-primary"
+                  className="flex items-center gap-2 rounded-xl border border-dashed border-slate-300 bg-white px-4 py-2.5 text-xs font-medium text-slate-600 transition-all duration-150 hover:border-slate-400 hover:text-primary active:scale-[0.98]"
                 >
                   <Plus className="h-4 w-4" /> Add contact
                 </Link>
@@ -274,8 +351,8 @@ export default function Home() {
             </section>
           )}
 
-          {/* Step 2: Recent Activity List (State Layer) */}
-          <section aria-labelledby="activity-heading">
+          {/* Recent Activity List & Quick Preview Modal */}
+          <section aria-labelledby="activity-heading" className="animate-fade-in-up animate-stagger-4">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-sky-700" aria-hidden="true" />
@@ -297,7 +374,6 @@ export default function Home() {
             </div>
 
             {activity.length === 0 ? (
-              /* Quiet row for new users */
               <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-xs">
                 <p className="text-sm text-slate-600">
                   No messages yet — start with{" "}
@@ -315,21 +391,27 @@ export default function Home() {
                 {activity.map((item) => (
                   <div
                     key={item.id}
-                    className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between"
+                    onClick={() => setPreviewItem(item)}
+                    className="group flex cursor-pointer flex-col gap-2 p-4 transition-colors hover:bg-slate-50/80 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="flex items-center gap-3">
                       <span className="shrink-0 rounded-md bg-sky-100 px-2.5 py-1 text-xs font-semibold text-primary">
                         {activityLabels[item.kind]}
                       </span>
-                      <p className="line-clamp-1 text-sm font-medium text-slate-800">
+                      <p className="line-clamp-1 text-sm font-medium text-slate-800 group-hover:text-primary">
                         {item.subject ||
                           item.output_text.slice(0, 60) ||
                           "Untitled draft"}
                       </p>
                     </div>
-                    <span className="text-xs text-slate-500">
-                      {formatRelativeTime(item.created_at)}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-slate-500">
+                        {formatRelativeTime(item.created_at)}
+                      </span>
+                      <span className="text-xs font-semibold text-sky-700 opacity-0 transition-opacity group-hover:opacity-100">
+                        Preview
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -348,13 +430,13 @@ export default function Home() {
             <div className="flex gap-2">
               <Link
                 href="/contacts"
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-slate-50"
+                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-primary transition-all hover:bg-slate-50 active:scale-95"
               >
                 Contacts
               </Link>
               <Link
                 href="/templates"
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-slate-50"
+                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-primary transition-all hover:bg-slate-50 active:scale-95"
               >
                 Templates
               </Link>
@@ -362,6 +444,102 @@ export default function Home() {
           </section>
         </div>
       </main>
+      <Footer />
+
+      {/* Activity Quick Preview Modal */}
+      {previewItem && (
+        <div
+          aria-modal="true"
+          role="dialog"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs animate-fade-in-up"
+          onClick={() => setPreviewItem(null)}
+        >
+          <div
+            className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-xl animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-2">
+                <span className="rounded-md bg-sky-100 px-2.5 py-1 text-xs font-semibold text-primary">
+                  {activityLabels[previewItem.kind]}
+                </span>
+                <span className="text-xs text-slate-500">
+                  {new Date(previewItem.created_at).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewItem(null)}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                aria-label="Close preview"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="my-4 space-y-3">
+              {previewItem.subject && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    Subject
+                  </p>
+                  <p className="mt-0.5 font-semibold text-primary">
+                    {previewItem.subject}
+                  </p>
+                </div>
+              )}
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  Body
+                </p>
+                <div className="mt-1.5 max-h-60 overflow-y-auto rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-800 whitespace-pre-wrap border border-slate-200">
+                  {previewItem.output_text}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <Link
+                href="/generate"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:underline"
+              >
+                Reuse in Compose <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPreviewItem(null)}
+                  className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  onClick={() => copyPreviewOutput(previewItem)}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
+                >
+                  {copiedPreview ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-400" /> Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5" /> Copy output
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
+

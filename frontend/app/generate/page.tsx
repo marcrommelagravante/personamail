@@ -1,8 +1,9 @@
 "use client";
 
-import { Check, Copy, Mail, UserRound } from "lucide-react";
+import { Check, Copy, Loader2, Mail, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { API_URL } from "../lib/api";
 
 type Contact = { id: string; name: string; relationship: string; tone: string };
@@ -74,7 +75,7 @@ export default function GeneratePage() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
+      <main className="mx-auto w-full flex-1 max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="animate-fade-in-up mb-8 max-w-2xl">
           <p className="text-sm font-semibold text-sky-700">
             A message that fits the relationship
@@ -155,16 +156,19 @@ export default function GeneratePage() {
                 </p>
               )}
               <button
-                type="submit"
+                type="button"
+                onClick={(e) => void handleGenerate(e)}
                 disabled={loading || isLoadingContacts || contacts.length === 0}
-                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? (
-                  "Preparing your message…"
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    Composing your message…
+                  </>
                 ) : (
                   <>
-                    <Mail className="h-4 w-4" aria-hidden="true" /> Compose
-                    message
+                    <Mail className="h-4 w-4" aria-hidden="true" /> Compose message
                   </>
                 )}
               </button>
@@ -242,6 +246,7 @@ export default function GeneratePage() {
           </aside>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

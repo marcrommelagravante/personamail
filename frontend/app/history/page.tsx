@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { API_URL } from "../lib/api";
 import {
   Clock,
@@ -11,8 +12,9 @@ import {
   Trash2,
   Copy,
   Check,
-  Loader2,
   AlertCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 type Activity = {
@@ -32,6 +34,7 @@ const labels = {
 };
 
 const API = API_URL;
+const ITEMS_PER_PAGE = 3;
 
 export default function HistoryPage() {
   const [items, setItems] = useState<Activity[]>([]);
@@ -39,11 +42,20 @@ export default function HistoryPage() {
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const loadHistory = async () => {
     const response = await fetch(`${API}/history/`, { credentials: "include" });
     if (!response.ok) throw new Error("Could not load history");
-    setItems(await response.json());
+    const data = await response.json();
+    setItems(data);
+    const maxPage = Math.max(1, Math.ceil(data.length / ITEMS_PER_PAGE));
+    if (currentPage > maxPage) setCurrentPage(maxPage);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -93,10 +105,16 @@ export default function HistoryPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+  const currentItems = items.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-4xl px-5 py-8 sm:px-8 sm:py-12">
+      <main className="mx-auto w-full flex-1 max-w-4xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="animate-fade-in-up mb-8">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
             <Clock className="h-3.5 w-3.5 text-slate-700" /> Recent activity
@@ -132,9 +150,10 @@ export default function HistoryPage() {
             )}
 
             {loading ? (
-              <div className="flex items-center justify-center py-16 text-slate-500">
-                <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                <span className="text-sm">Loading your history…</span>
+              <div className="space-y-4" aria-label="Loading history">
+                <div className="h-32 animate-pulse rounded-2xl bg-slate-200" />
+                <div className="h-32 animate-pulse rounded-2xl bg-slate-200" />
+                <div className="h-32 animate-pulse rounded-2xl bg-slate-200" />
               </div>
             ) : items.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
@@ -148,85 +167,133 @@ export default function HistoryPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {items.map((item) => {
-                  const meta = labels[item.kind] || labels.compose;
-                  const Icon = meta.icon;
+                <div className="flex flex-col gap-4">
+                  {currentItems.map((item) => {
+                    const meta = labels[item.kind] || labels.compose;
+                    const Icon = meta.icon;
 
-                  return (
-                    <article
-                      key={item.id}
-                      className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-300"
-                    >
-                      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-                        <div className="flex items-start gap-3">
-                          <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
-                            <Icon className="h-4 w-4" />
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                                {meta.title}
-                              </span>
-                              <span className="text-xs text-slate-400">·</span>
-                              <span className="text-xs text-slate-500">
-                                {new Date(item.created_at).toLocaleDateString(undefined, {
-                                  month: "short",
-                                  day: "numeric",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                })}
-                              </span>
+                    return (
+                      <article
+                        key={item.id}
+                        className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-300"
+                      >
+                        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+                          <div className="flex items-start gap-3">
+                            <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
+                              <Icon className="h-4 w-4" />
                             </div>
-                            <h2 className="mt-1 font-semibold text-slate-900">
-                              {item.subject || "Reviewed Text"}
-                            </h2>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                  {meta.title}
+                                </span>
+                                <span className="text-xs text-slate-400">·</span>
+                                <span className="text-xs text-slate-500">
+                                  {new Date(item.created_at).toLocaleDateString(undefined, {
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
+                              </div>
+                              <h2 className="mt-1 font-semibold text-slate-900">
+                                {item.subject || "Reviewed Text"}
+                              </h2>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 self-end sm:self-center">
+                            <button
+                              type="button"
+                              onClick={() => copyOutput(item)}
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                            >
+                              {copiedId === item.id ? (
+                                <>
+                                  <Check className="h-3.5 w-3.5 text-emerald-600" />
+                                  <span className="text-emerald-600 font-semibold">Copied</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="h-3.5 w-3.5" /> Copy output
+                                </>
+                              )}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => void handleDelete(item.id)}
+                              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" /> Delete
+                            </button>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 self-end sm:self-center">
-                          <button
-                            type="button"
-                            onClick={() => copyOutput(item)}
-                            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
-                          >
-                            {copiedId === item.id ? (
-                              <>
-                                <Check className="h-3.5 w-3.5 text-emerald-600" />
-                                <span className="text-emerald-600 font-semibold">Copied</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="h-3.5 w-3.5" /> Copy output
-                              </>
-                            )}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => void handleDelete(item.id)}
-                            className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" /> Delete
-                          </button>
+                        <div className="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">
+                          {item.output_text}
                         </div>
-                      </div>
 
-                      <div className="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">
-                        {item.output_text}
-                      </div>
+                        {item.summary && (
+                          <p className="mt-3 text-xs text-slate-500 italic">
+                            <span className="font-medium text-slate-700 not-italic">Summary:</span> {item.summary}
+                          </p>
+                        )}
+                      </article>
+                    );
+                  })}
+                </div>
 
-                      {item.summary && (
-                        <p className="mt-3 text-xs text-slate-500 italic">
-                          <span className="font-medium text-slate-700 not-italic">Summary:</span> {item.summary}
-                        </p>
-                      )}
-                    </article>
-                  );
-                })}
+                {totalPages > 1 && (
+                  <div className="mt-4 flex flex-col items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:flex-row">
+                    <p className="text-xs font-medium text-slate-500">
+                      Showing <span className="font-semibold text-slate-800">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{" "}
+                      <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, items.length)}</span> of{" "}
+                      <span className="font-semibold text-slate-800">{items.length}</span> activity logs
+                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        disabled={currentPage === 1}
+                        onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95"
+                      >
+                        <ChevronLeft className="h-4 w-4" /> Previous
+                      </button>
+                      <div className="flex items-center gap-1 px-2">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                          <button
+                            key={page}
+                            type="button"
+                            onClick={() => handlePageChange(page)}
+                            className={`h-8 w-8 rounded-lg text-xs font-semibold transition ${
+                              currentPage === page
+                                ? "bg-primary text-white"
+                                : "text-slate-600 hover:bg-slate-100"
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95"
+                      >
+                        Next <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </>
         )}
       </main>
+      <Footer />
     </>
   );
 }
+

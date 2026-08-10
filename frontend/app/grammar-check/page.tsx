@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { API_URL } from "../lib/api";
 import {
   CheckCircle2,
@@ -61,7 +62,7 @@ export default function GrammarCheckPage() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-3xl px-5 py-8 sm:px-8 sm:py-12">
+      <main className="mx-auto w-full flex-1 max-w-3xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="animate-fade-in-up mb-8">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
             <CheckCircle2 className="h-3.5 w-3.5 text-slate-700" /> Polish & Proofread
@@ -97,7 +98,7 @@ export default function GrammarCheckPage() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md disabled:opacity-50"
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-all duration-150 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md active:scale-[0.98] disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -161,6 +162,7 @@ export default function GrammarCheckPage() {
           </div>
         )}
       </main>
+      <Footer />
     </>
   );
 }

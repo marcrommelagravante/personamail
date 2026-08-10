@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { API_URL } from "../lib/api";
 
 const initialSettings = {
@@ -92,7 +93,7 @@ export default function SettingsPage() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-2xl px-5 py-8 sm:px-8 sm:py-12">
+      <main className="mx-auto w-full flex-1 max-w-2xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="animate-fade-in-up mb-8">
           <p className="text-sm font-semibold text-sky-700">
             Your communication style
@@ -228,6 +229,7 @@ export default function SettingsPage() {
           </div>
         )}
       </main>
+      <Footer />
     </>
   );
 }
