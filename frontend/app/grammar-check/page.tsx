@@ -9,9 +9,11 @@ const API = API_URL;
 export default function GrammarCheckPage() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ corrected_text: string; changes_summary: string } | null>(null);
+  const [result, setResult] = useState<{
+    corrected_text: string;
+    changes_summary: string;
+  } | null>(null);
   const [error, setError] = useState("");
-
 
   const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,11 +48,18 @@ export default function GrammarCheckPage() {
     <>
       <Navbar />
       <main className="mx-auto max-w-2xl px-5 py-10 sm:px-8">
-        <p className="text-sm font-medium text-sky-700">Clarity, without losing your voice</p>
+        <p className="text-sm font-medium text-sky-700">
+          Clarity, without losing your voice
+        </p>
         <h1 className="mt-1 text-3xl font-semibold tracking-tight">Review</h1>
-        <p className="mt-2 mb-8 text-slate-600">Check spelling, grammar, and clarity before you send.</p>
+        <p className="mt-2 mb-8 text-slate-600">
+          Check spelling, grammar, and clarity before you send.
+        </p>
 
-        <form onSubmit={handleCheck} className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <form
+          onSubmit={handleCheck}
+          className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+        >
           <div>
             <label className="mb-1 block text-sm font-medium">
               Text to check
@@ -68,13 +77,20 @@ export default function GrammarCheckPage() {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-lg bg-[#0F172A] px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Reviewing your message…" : "Review message"}
           </button>
         </form>
 
-        {error && <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</p>}
+        {error && (
+          <p
+            className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            role="alert"
+          >
+            {error}
+          </p>
+        )}
 
         {result && (
           <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
