@@ -1,0 +1,21 @@
+{
+  "venvPath": "backend",
+  "venv": "venv",
+  "extraPaths": [
+    "backend",
+    "backend/venv/Lib/site-packages",
+    "C:/Users/ezrxe/OneDrive/Documents/GitHub/personamail/backend",
+    "C:/Users/ezrxe/OneDrive/Documents/GitHub/personamail/backend/venv/Lib/site-packages"
+  ],
+  "executionEnvironments": [
+    {
+      "root": "backend",
+      "extraPaths": [
+        "backend",
+        "backend/venv/Lib/site-packages",
+        "C:/Users/ezrxe/OneDrive/Documents/GitHub/personamail/backend",
+        "C:/Users/ezrxe/OneDrive/Documents/GitHub/personamail/backend/venv/Lib/site-packages"
+      ]
+    }
+  ]
+}

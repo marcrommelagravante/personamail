@@ -1,0 +1,16 @@
+{
+  "project_name": "personamail",
+  "search_paths": [
+    "backend",
+    "backend/venv/Lib/site-packages",
+    "C:/Users/ezrxe/OneDrive/Documents/GitHub/personamail/backend",
+    "C:/Users/ezrxe/OneDrive/Documents/GitHub/personamail/backend/venv/Lib/site-packages"
+  ],
+  "exclude": [
+    "**/__pyrefly_virtual__/**",
+    "**/inmemory/**",
+    "c:/__pyrefly_virtual__/**",
+    "C:/__pyrefly_virtual__/**"
+  ],
+  "python_interpreter": "C:/Users/ezrxe/OneDrive/Documents/GitHub/personamail/backend/venv/Scripts/python.exe"
+}

@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: personamail-backend
+    env: python
+    buildCommand: "pip install -r requirements.txt && alembic upgrade head"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false
+      - key: BACKEND_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false

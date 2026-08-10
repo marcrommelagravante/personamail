@@ -5,6 +5,8 @@ import { Menu, Settings, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+import Logo from "./Logo";
+
 const navigation = [
   { href: "/generate", label: "Compose" },
   { href: "/contacts", label: "Contacts" },
@@ -25,20 +27,7 @@ export default function Navbar() {
         aria-label="Main navigation"
       >
         <div className="flex h-16 items-center justify-between gap-4">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-500"
-          >
-            <span
-              aria-hidden="true"
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-white"
-            >
-              P
-            </span>
-            <span className="text-base font-semibold tracking-tight text-primary">
-              Persona<span className="text-sky-600">Mail</span>
-            </span>
-          </Link>
+          <Logo href="/" variant="full" size="sm" />
 
           <div className="hidden items-center gap-1 md:flex">
             {navigation.map((item) => (

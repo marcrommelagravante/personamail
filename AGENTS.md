@@ -89,13 +89,18 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Extract Tailwind v4 design tokens (`primary`, `accent`) and fix contrast/slop issues with 0 Impeccable warnings
 - [x] Create split-screen `/login` page, toast logout flow, collapsed dashboard hero, and Recent Activity/Contacts state layer
 - [x] Polish remaining sub-pages (Contacts, Templates, History, Improve, Review) to align with the new design system
-- [ ] Implement the prioritized backend and prompt improvements from the pre-launch audit
+- [x] Implement the prioritized backend and prompt improvements from the pre-launch audit
+- [x] Integrate 7-part layout and tone formatting rules from `docs/email_tone_structure.md` into Groq system and user prompts (`backend/services/prompts.py`)
+- [x] Create 24/7 cloud deployment blueprint (`backend/render.yaml` & `docs/Deployment_Guide.md`) for zero-downtime Vercel + Render + Neon hosting
+- [x] Install `ui-ux-pro-max` design intelligence skill into `.agents/skills/ui-ux-pro-max`, generate & persist `MASTER.md` design system
+- [x] Polish UI/UX across all pages with bespoke micro-animations (`fadeInUp`, `slideDownFade`, `scaleIn`), Google G logo SVG on login, anti-pattern icon removal, 44px touch targets, and verified zero-error `npm run lint` & `npm run build`
 - [ ] Deploy the frontend to Vercel and backend to Render, then run production verification
 
 ## Active UI/UX Polish Handoff
 
 ### Completed design work
 
+- `frontend/app/components/Logo.tsx` is the official brand logo component rendering the Geist Option B stylized P icon and wordmark (`#0F172A` primary, `#7CE3FF` cyan accent), integrated into `Navbar.tsx`, `login/page.tsx`, and browser tab metadata in `layout.tsx`.
 - `frontend/app/components/Navbar.tsx` is now the responsive shared app shell.
   It uses desktop navigation, mobile menu, Lucide icons, and keeps primary
   navigation focused on Compose, Contacts, Templates, History, and Settings.

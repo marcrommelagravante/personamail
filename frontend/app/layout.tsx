@@ -15,6 +15,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "PersonaMail | Relationship-aware communication",
   description: "Compose thoughtful messages for every relationship.",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

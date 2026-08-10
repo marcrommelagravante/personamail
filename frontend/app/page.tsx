@@ -151,7 +151,7 @@ export default function Home() {
       <main className="mx-auto min-h-[calc(100vh-64px)] max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="space-y-8">
           {/* Step 1: Collapsed Hero Banner */}
-          <section className="flex flex-col justify-between gap-4 rounded-2xl bg-primary px-6 py-6 text-white shadow-sm sm:flex-row sm:items-center sm:px-8">
+          <section className="animate-fade-in-up flex flex-col justify-between gap-4 rounded-2xl bg-primary px-6 py-6 text-white shadow-xs sm:flex-row sm:items-center sm:px-8">
             <div>
               <p className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-sky-200">
                 <Mail className="h-3.5 w-3.5" aria-hidden="true" />
@@ -163,7 +163,7 @@ export default function Home() {
             </div>
             <Link
               href="/generate"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-sky-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-primary transition-all hover:-translate-y-0.5 hover:bg-sky-200 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               <PenLine className="h-4 w-4" aria-hidden="true" /> Compose a
               message
@@ -172,7 +172,7 @@ export default function Home() {
 
           {/* Contextual Nudge for new users without contacts */}
           {contacts.length === 0 && (
-            <div className="flex flex-col gap-3 rounded-2xl border border-sky-200 bg-sky-50/80 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="animate-slide-down-fade flex flex-col gap-3 rounded-2xl border border-sky-200 bg-sky-50/80 p-5 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-200 text-sky-900">
                   <UserPlus className="h-4 w-4" aria-hidden="true" />
@@ -184,7 +184,7 @@ export default function Home() {
               </div>
               <Link
                 href="/contacts"
-                className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-sky-900 hover:underline"
+                className="inline-flex shrink-0 cursor-pointer items-center gap-1 text-sm font-semibold text-sky-900 hover:underline"
               >
                 Add first contact{" "}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -193,7 +193,7 @@ export default function Home() {
           )}
 
           {/* Quick Action Grid */}
-          <section aria-labelledby="quick-actions-heading">
+          <section aria-labelledby="quick-actions-heading" className="animate-fade-in-up animate-stagger-1">
             <h2 id="quick-actions-heading" className="sr-only">
               Quick Actions
             </h2>
@@ -204,7 +204,7 @@ export default function Home() {
                   <Link
                     key={action.href}
                     href={action.href}
-                    className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-xs transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+                    className="group cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-xs transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
                   >
                     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-primary">
                       <Icon className="h-5 w-5" aria-hidden="true" />

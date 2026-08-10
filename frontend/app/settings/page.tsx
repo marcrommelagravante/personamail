@@ -87,17 +87,17 @@ export default function SettingsPage() {
   };
 
   const inputClass =
-    "w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100";
+    "w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10";
 
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-2xl px-5 py-10 sm:px-8">
-        <div className="mb-8">
-          <p className="text-sm font-medium text-sky-700">
+      <main className="mx-auto max-w-2xl px-5 py-8 sm:px-8 sm:py-12">
+        <div className="animate-fade-in-up mb-8">
+          <p className="text-sm font-semibold text-sky-700">
             Your communication style
           </p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight">
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
             Settings
           </h1>
           <p className="mt-2 text-slate-600">
@@ -106,7 +106,7 @@ export default function SettingsPage() {
           </p>
         </div>
         {!isAuthenticated ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+          <div className="animate-scale-in rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs">
             <h2 className="font-semibold">Sign in to manage settings</h2>
             <p className="mt-2 text-sm text-slate-600">
               Your communication defaults stay private to your account.
@@ -118,13 +118,13 @@ export default function SettingsPage() {
           <div className="space-y-6">
             <form
               onSubmit={handleSubmit}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+              className="animate-fade-in-up animate-stagger-1 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6"
             >
               <div className="space-y-5">
                 <div>
                   <label
                     htmlFor="tone"
-                    className="mb-1.5 block text-sm font-medium"
+                    className="mb-1.5 block text-sm font-semibold text-slate-700"
                   >
                     Default tone
                   </label>
@@ -147,7 +147,7 @@ export default function SettingsPage() {
                 <div>
                   <label
                     htmlFor="greeting"
-                    className="mb-1.5 block text-sm font-medium"
+                    className="mb-1.5 block text-sm font-semibold text-slate-700"
                   >
                     Default greeting
                   </label>
@@ -167,7 +167,7 @@ export default function SettingsPage() {
                 <div>
                   <label
                     htmlFor="closing"
-                    className="mb-1.5 block text-sm font-medium"
+                    className="mb-1.5 block text-sm font-semibold text-slate-700"
                   >
                     Default closing
                   </label>
@@ -187,7 +187,7 @@ export default function SettingsPage() {
               </div>
               {error && (
                 <p
-                  className="mt-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                  className="animate-slide-down-fade mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
                   role="alert"
                 >
                   {error}
@@ -195,7 +195,7 @@ export default function SettingsPage() {
               )}
               {success && (
                 <p
-                  className="mt-5 rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800"
+                  className="animate-slide-down-fade mt-5 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800"
                   role="status"
                 >
                   {success}
@@ -204,25 +204,25 @@ export default function SettingsPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="mt-6 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-6 inline-flex w-full cursor-pointer items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md disabled:opacity-50"
               >
-                {saving ? "Saving…" : "Save settings"}
+                {saving ? "Saving defaults…" : "Save defaults"}
               </button>
             </form>
 
-            <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-              <div>
-                <h3 className="font-semibold text-primary">Session & Security</h3>
-                <p className="mt-1 text-sm text-slate-600">
-                  Signed in with Google OAuth session.
-                </p>
-              </div>
+            <div className="animate-fade-in-up animate-stagger-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6">
+              <h2 className="text-base font-semibold text-slate-900">
+                Session & Security
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Sign out of your PersonaMail workspace on this browser.
+              </p>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-red-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+                className="mt-4 inline-flex cursor-pointer items-center justify-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-red-700 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
               >
-                Log out
+                Sign out of PersonaMail
               </button>
             </div>
           </div>

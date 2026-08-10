@@ -75,7 +75,7 @@ export default function GeneratePage() {
     <>
       <Navbar />
       <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
-        <div className="mb-8 max-w-2xl">
+        <div className="animate-fade-in-up mb-8 max-w-2xl">
           <p className="text-sm font-semibold text-sky-700">
             A message that fits the relationship
           </p>
@@ -90,7 +90,7 @@ export default function GeneratePage() {
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.82fr)]">
           <form
             onSubmit={handleGenerate}
-            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+            className="animate-fade-in-up animate-stagger-1 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6"
           >
             <div className="space-y-6">
               <div>
@@ -105,7 +105,7 @@ export default function GeneratePage() {
                   value={contactId}
                   onChange={(event) => setContactId(event.target.value)}
                   disabled={isLoadingContacts}
-                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 disabled:bg-slate-50"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 disabled:bg-slate-50"
                 >
                   <option value="">
                     {isLoadingContacts
@@ -139,7 +139,7 @@ export default function GeneratePage() {
                   required
                   rows={7}
                   placeholder="For example: ask for a one-week extension on the final project, explain that I have been unwell, and propose a new deadline."
-                  className="w-full resize-y rounded-xl border border-slate-300 px-3 py-3 text-sm leading-6 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                  className="w-full resize-y rounded-xl border border-slate-300 px-3 py-3 text-sm leading-6 outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
                 />
                 <p className="mt-2 text-sm text-slate-500">
                   Include the key fact, your request, and any deadline or next
@@ -148,7 +148,7 @@ export default function GeneratePage() {
               </div>
               {error && (
                 <p
-                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                  className="animate-slide-down-fade rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
                   role="alert"
                 >
                   {error}
@@ -157,7 +157,7 @@ export default function GeneratePage() {
               <button
                 type="submit"
                 disabled={loading || isLoadingContacts || contacts.length === 0}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? (
                   "Preparing your message…"
@@ -170,8 +170,8 @@ export default function GeneratePage() {
               </button>
             </div>
           </form>
-          <aside className="space-y-5">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <aside className="animate-fade-in-up animate-stagger-2 space-y-5">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
               <div className="flex items-center gap-2">
                 <UserRound
                   className="h-4 w-4 text-sky-700"
@@ -196,7 +196,7 @@ export default function GeneratePage() {
               )}
             </div>
             {result ? (
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="animate-scale-in rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <p className="text-sm font-semibold text-sky-700">
@@ -207,14 +207,14 @@ export default function GeneratePage() {
                   <button
                     type="button"
                     onClick={copyToClipboard}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-primary hover:bg-slate-50"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-primary transition-all hover:bg-slate-50 active:scale-95"
                   >
                     {copied ? (
-                      <Check className="h-4 w-4" aria-hidden="true" />
+                      <Check className="h-4 w-4 text-emerald-600" aria-hidden="true" />
                     ) : (
                       <Copy className="h-4 w-4" aria-hidden="true" />
                     )}
-                    {copied ? "Copied" : "Copy"}
+                    {copied ? <span className="text-emerald-600 font-semibold">Copied</span> : "Copy"}
                   </button>
                 </div>
                 <div className="mt-5 border-y border-slate-100 py-4">

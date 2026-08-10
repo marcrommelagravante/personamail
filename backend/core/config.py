@@ -2,12 +2,12 @@ from pydantic_settings import BaseSettings
 from typing import Literal
 
 class Settings(BaseSettings):
-    DATABASE_URL: str
-    GOOGLE_CLIENT_ID: str
-    GOOGLE_CLIENT_SECRET: str
-    GROQ_API_KEY: str
-    SECRET_KEY: str
-    FRONTEND_URL: str
+    DATABASE_URL: str = ""
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
+    GROQ_API_KEY: str = ""
+    SECRET_KEY: str = ""
+    FRONTEND_URL: str = "http://localhost:3000"
     BACKEND_URL: str = "http://localhost:8000"
     ENVIRONMENT: Literal["development", "production"] = "development"
     CORS_ORIGINS: str = "http://localhost:3000"

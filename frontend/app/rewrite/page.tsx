@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { API_URL } from "../lib/api";
 import {
-  Wand2,
+  RefreshCw,
   Copy,
   Check,
   Loader2,
   AlertCircle,
-  Sparkles,
+  Sliders,
+  FileText,
 } from "lucide-react";
 
 type Contact = {
@@ -64,7 +65,7 @@ export default function RewritePage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to improve email draft");
+      if (!res.ok) throw new Error("Failed to improve draft");
       const data = await res.json();
       setResult(data);
     } catch {
@@ -83,15 +84,15 @@ export default function RewritePage() {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-200";
+    "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10";
 
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-3xl px-5 py-10 sm:px-8">
-        <div className="mb-8">
+      <main className="mx-auto max-w-3xl px-5 py-8 sm:px-8 sm:py-12">
+        <div className="animate-fade-in-up mb-8">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-            <Wand2 className="h-3.5 w-3.5" /> Adaptive Tone & Phrasing
+            <Sliders className="h-3.5 w-3.5 text-slate-700" /> Adaptive Tone & Phrasing
           </span>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
             Improve
@@ -103,7 +104,7 @@ export default function RewritePage() {
 
         <form
           onSubmit={handleRewrite}
-          className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+          className="animate-fade-in-up animate-stagger-1 flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8"
         >
           <div>
             <label htmlFor="select-contact" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
@@ -149,7 +150,7 @@ export default function RewritePage() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -157,7 +158,7 @@ export default function RewritePage() {
                 </>
               ) : (
                 <>
-                  <Wand2 className="h-4 w-4" /> Improve message
+                  <RefreshCw className="h-4 w-4" /> Improve message
                 </>
               )}
             </button>
@@ -166,7 +167,7 @@ export default function RewritePage() {
 
         {error && (
           <div
-            className="mt-6 flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="animate-slide-down-fade mt-6 flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
             role="alert"
           >
             <AlertCircle className="h-4 w-4 shrink-0" />
@@ -175,16 +176,16 @@ export default function RewritePage() {
         )}
 
         {result && (
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="animate-scale-in mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-slate-700" />
+                <FileText className="h-4 w-4 text-slate-700" />
                 <h2 className="font-semibold text-slate-900">Improved Message</h2>
               </div>
               <button
                 type="button"
                 onClick={copyToClipboard}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 active:scale-95"
               >
                 {copied ? (
                   <>

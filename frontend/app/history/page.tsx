@@ -6,7 +6,7 @@ import { API_URL } from "../lib/api";
 import {
   Clock,
   PenTool,
-  Wand2,
+  RefreshCw,
   CheckCircle2,
   Trash2,
   Copy,
@@ -27,7 +27,7 @@ type Activity = {
 
 const labels = {
   compose: { title: "Compose", icon: PenTool, bg: "bg-slate-100 text-slate-700" },
-  improve: { title: "Improve", icon: Wand2, bg: "bg-slate-100 text-slate-700" },
+  improve: { title: "Improve", icon: RefreshCw, bg: "bg-slate-100 text-slate-700" },
   review: { title: "Review", icon: CheckCircle2, bg: "bg-slate-100 text-slate-700" },
 };
 
@@ -96,16 +96,16 @@ export default function HistoryPage() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-4xl px-5 py-10 sm:px-8">
-        <div className="mb-8">
+      <main className="mx-auto max-w-4xl px-5 py-8 sm:px-8 sm:py-12">
+        <div className="animate-fade-in-up mb-8">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-            <Clock className="h-3.5 w-3.5" /> Conversation Log
+            <Clock className="h-3.5 w-3.5 text-slate-700" /> Recent activity
           </span>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
             History
           </h1>
           <p className="mt-1.5 text-slate-600">
-            Revisit and reuse messages you composed, improved, or reviewed.
+            Review and copy previously composed, improved, or reviewed messages.
           </p>
         </div>
 

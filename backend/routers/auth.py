@@ -58,7 +58,7 @@ async def google_callback(code: str, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(user)
 
-    jwt_token = create_access_token(str(user.id), user.email)
+    jwt_token = create_access_token(str(user.id), str(user.email))
 
     response = RedirectResponse(f"{settings.FRONTEND_URL}?login=success")
     response.set_cookie(
