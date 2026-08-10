@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import { API_URL } from "../lib/api";
 
@@ -12,6 +13,7 @@ const initialSettings = {
 const API = API_URL;
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [settings, setSettings] = useState(initialSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -81,7 +83,7 @@ export default function SettingsPage() {
     } catch {
       // Ignore network errors on logout redirect
     }
-    window.location.assign("/login?logout=true");
+    router.push("/login?logout=true");
   };
 
   const inputClass =

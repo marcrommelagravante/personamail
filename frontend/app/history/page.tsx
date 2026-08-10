@@ -3,6 +3,17 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { API_URL } from "../lib/api";
+import {
+  Clock,
+  PenTool,
+  Wand2,
+  CheckCircle2,
+  Trash2,
+  Copy,
+  Check,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
 
 type Activity = {
   id: string;
@@ -14,7 +25,12 @@ type Activity = {
   created_at: string;
 };
 
-const labels = { compose: "Compose", improve: "Improve", review: "Review" };
+const labels = {
+  compose: { title: "Compose", icon: PenTool, bg: "bg-slate-100 text-slate-700" },
+  improve: { title: "Improve", icon: Wand2, bg: "bg-slate-100 text-slate-700" },
+  review: { title: "Review", icon: CheckCircle2, bg: "bg-slate-100 text-slate-700" },
+};
+
 const API = API_URL;
 
 export default function HistoryPage() {
@@ -22,6 +38,7 @@ export default function HistoryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const loadHistory = async () => {
     const response = await fetch(`${API}/history/`, { credentials: "include" });
@@ -67,82 +84,144 @@ export default function HistoryPage() {
     }
   };
 
+  const copyOutput = (item: Activity) => {
+    const textToCopy = item.subject
+      ? `Subject: ${item.subject}\n\n${item.output_text}`
+      : item.output_text;
+    void navigator.clipboard.writeText(textToCopy);
+    setCopiedId(item.id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   return (
     <>
       <Navbar />
       <main className="mx-auto max-w-4xl px-5 py-10 sm:px-8">
         <div className="mb-8">
-          <p className="text-sm font-medium text-sky-700">Your recent work</p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+            <Clock className="h-3.5 w-3.5" /> Conversation Log
+          </span>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
             History
           </h1>
-          <p className="mt-2 text-slate-600">
-            Revisit messages you composed, improved, or reviewed.
+          <p className="mt-1.5 text-slate-600">
+            Revisit and reuse messages you composed, improved, or reviewed.
           </p>
         </div>
+
         {!isAuthenticated ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <h2 className="font-semibold">Sign in to see your history</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Your message history is private to your PersonaMail account.
+          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+              <Clock className="h-6 w-6" />
+            </div>
+            <h2 className="mt-4 font-semibold text-slate-900">Sign in to view history</h2>
+            <p className="mt-1.5 text-sm text-slate-600">
+              Your saved communication history stays private to your PersonaMail account.
             </p>
           </div>
         ) : (
           <>
             {error && (
-              <p
-                className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+              <div
+                className="mb-6 flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
                 role="alert"
               >
-                {error}
-              </p>
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <p>{error}</p>
+              </div>
             )}
+
             {loading ? (
-              <p className="text-sm text-slate-500">Loading your history…</p>
+              <div className="flex items-center justify-center py-16 text-slate-500">
+                <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                <span className="text-sm">Loading your history…</span>
+              </div>
             ) : items.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
-                <h2 className="font-semibold">No history yet</h2>
-                <p className="mt-2 text-sm text-slate-600">
-                  Your composed, improved, and reviewed messages will appear
-                  here.
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+                  <Clock className="h-6 w-6" />
+                </div>
+                <h2 className="mt-4 font-semibold text-slate-900">No activity logged yet</h2>
+                <p className="mx-auto mt-1.5 max-w-sm text-sm text-slate-600">
+                  Your composed, improved, and reviewed messages will automatically be recorded here.
                 </p>
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {items.map((item) => (
-                  <article
-                    key={item.id}
-                    className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-                  >
-                    <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-sky-700">
-                          {labels[item.kind]}
-                        </p>
-                        <h2 className="mt-2 font-semibold">
-                          {item.subject || "Reviewed text"}
-                        </h2>
-                        <p className="mt-1 text-xs text-slate-500">
-                          {new Date(item.created_at).toLocaleString()}
-                        </p>
+                {items.map((item) => {
+                  const meta = labels[item.kind] || labels.compose;
+                  const Icon = meta.icon;
+
+                  return (
+                    <article
+                      key={item.id}
+                      className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-300"
+                    >
+                      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+                        <div className="flex items-start gap-3">
+                          <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                {meta.title}
+                              </span>
+                              <span className="text-xs text-slate-400">·</span>
+                              <span className="text-xs text-slate-500">
+                                {new Date(item.created_at).toLocaleDateString(undefined, {
+                                  month: "short",
+                                  day: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </span>
+                            </div>
+                            <h2 className="mt-1 font-semibold text-slate-900">
+                              {item.subject || "Reviewed Text"}
+                            </h2>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 self-end sm:self-center">
+                          <button
+                            type="button"
+                            onClick={() => copyOutput(item)}
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                          >
+                            {copiedId === item.id ? (
+                              <>
+                                <Check className="h-3.5 w-3.5 text-emerald-600" />
+                                <span className="text-emerald-600 font-semibold">Copied</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="h-3.5 w-3.5" /> Copy output
+                              </>
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleDelete(item.id)}
+                            className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" /> Delete
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="self-start rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-primary"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                    <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-slate-700">
-                      {item.output_text}
-                    </p>
-                    {item.summary && (
-                      <p className="mt-4 border-t border-slate-100 pt-4 text-sm text-slate-500">
-                        Summary: {item.summary}
-                      </p>
-                    )}
-                  </article>
-                ))}
+
+                      <div className="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">
+                        {item.output_text}
+                      </div>
+
+                      {item.summary && (
+                        <p className="mt-3 text-xs text-slate-500 italic">
+                          <span className="font-medium text-slate-700 not-italic">Summary:</span> {item.summary}
+                        </p>
+                      )}
+                    </article>
+                  );
+                })}
               </div>
             )}
           </>

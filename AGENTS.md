@@ -75,7 +75,7 @@ frontend/app/
 After completing a project task, update this section with its status,
 verification, and the next active task. Keep this concise and accurate.
 
-### Current Status (2026-08-09)
+### Current Status (2026-08-10)
 
 - [x] Brand/UI foundation and shared navigation
 - [x] Templates, History, and Settings workspace features
@@ -86,7 +86,9 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Add CI quality gates and formal architecture, database, and API documentation
 - [x] Complete pre-launch UI/UX, backend, prompt, and authentication audit
 - [x] Redesign shared navigation, Home dashboard, and Compose experience
-- [ ] Apply the same UI/UX system to Contacts, Templates, History, Settings, Improve, and Review
+- [x] Extract Tailwind v4 design tokens (`primary`, `accent`) and fix contrast/slop issues with 0 Impeccable warnings
+- [x] Create split-screen `/login` page, toast logout flow, collapsed dashboard hero, and Recent Activity/Contacts state layer
+- [x] Polish remaining sub-pages (Contacts, Templates, History, Improve, Review) to align with the new design system
 - [ ] Implement the prioritized backend and prompt improvements from the pre-launch audit
 - [ ] Deploy the frontend to Vercel and backend to Render, then run production verification
 
@@ -95,12 +97,20 @@ verification, and the next active task. Keep this concise and accurate.
 ### Completed design work
 
 - `frontend/app/components/Navbar.tsx` is now the responsive shared app shell.
-  It uses a desktop navigation, mobile menu, Lucide icons, and keeps the primary
+  It uses desktop navigation, mobile menu, Lucide icons, and keeps primary
   navigation focused on Compose, Contacts, Templates, History, and Settings.
-- `frontend/app/page.tsx` is a dashboard with one primary Compose action and
-  contextual Improve/Review actions.
+- `frontend/app/login/page.tsx` is a 50/50 split-screen login page featuring a
+  dark primary panel with brand tagline, a white surface with Google OAuth CTA,
+  and search-param based logout toast handling.
+- `frontend/app/page.tsx` is a populated dashboard featuring a collapsed single-line
+  hero, a Recent Activity list layer (from `/history/`), a Recent Contacts strip (from `/contacts/`),
+  quiet empty states for new users, and unauthenticated redirect to `/login`.
+- `frontend/app/settings/page.tsx` now includes a Session & Security section with
+  toast-based logout redirecting to `/login?logout=true`.
+- `frontend/app/globals.css` defines `--color-primary` (`#0F172A`) and `--color-accent` (`#7CE3FF`)
+  tokens in Tailwind v4 `@theme inline`.
 - `frontend/app/generate/page.tsx` is the reference implementation for the
-  new workflow layout: visible labels, a focused primary action, contextual
+  new workflow layout: visible labels, focused primary action, contextual
   information, loading/error/empty states, and copy-success feedback.
 - `lucide-react` is installed in `frontend/package.json`. Use Lucide icons
   only; never add emoji or a second icon library.
