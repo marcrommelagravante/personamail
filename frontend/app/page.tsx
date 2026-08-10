@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
@@ -16,6 +15,8 @@ import {
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import { API_URL } from "./lib/api";
+
+import LandingPage from "./components/LandingPage";
 
 type User = { id: string; email: string; name: string; picture: string };
 
@@ -82,7 +83,6 @@ function getInitials(name: string): string {
 }
 
 export default function Home() {
-  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [activity, setActivity] = useState<ActivityItem[]>([]);
@@ -95,7 +95,7 @@ export default function Home() {
           credentials: "include",
         });
         if (!authRes.ok) {
-          router.replace("/login");
+          setUser(null);
           return;
         }
         const userData = await authRes.json();
@@ -117,14 +117,14 @@ export default function Home() {
           setActivity(historyData.slice(0, 4));
         }
       } catch {
-        router.replace("/login");
+        setUser(null);
       } finally {
         setLoading(false);
       }
     };
 
     void loadDashboard();
-  }, [router]);
+  }, []);
 
   if (loading) {
     return (
@@ -141,7 +141,9 @@ export default function Home() {
     );
   }
 
-  if (!user) return null;
+  if (!user) {
+    return <LandingPage />;
+  }
 
   const firstName = user.name.split(" ")[0];
 

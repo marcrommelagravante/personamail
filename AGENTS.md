@@ -94,43 +94,57 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Create 24/7 cloud deployment blueprint (`backend/render.yaml` & `docs/Deployment_Guide.md`) for zero-downtime Vercel + Render + Neon hosting
 - [x] Install `ui-ux-pro-max` design intelligence skill into `.agents/skills/ui-ux-pro-max`, generate & persist `MASTER.md` design system
 - [x] Polish UI/UX across all pages with bespoke micro-animations (`fadeInUp`, `slideDownFade`, `scaleIn`), Google G logo SVG on login, anti-pattern icon removal, 44px touch targets, and verified zero-error `npm run lint` & `npm run build`
+- [x] Build official landing page from `docs/Landing_page.md` using `ui-ux-pro-max` skill (interactive product preview, value proposition comparison, 4 feature cards, 3-step workflow, trust block, footer, standalone `/landing` route, and unauthenticated `/` landing page)
+- [ ] Implement Dashboard Page UX overhaul (workspace stats header, quick action cards with contextual hints, recent activity drawer/preview)
+- [ ] Implement Scroll-Driven & Entrance Animations (staggered section fade-ins, viewport reveal effects, smooth anchor scrolling)
+- [ ] Implement Hover Micro-Interactions (smooth 150ms transform lifts `hover:-translate-y-1`, active button spring scale `active:scale-[0.98]`, subtle ring glows)
+- [ ] Implement Polished Skeleton & Async Loading States (shimmer pulse skeletons, status-reflecting spinner CTAs, non-jarring state transitions)
 - [ ] Deploy the frontend to Vercel and backend to Render, then run production verification
 
 ## Active UI/UX Polish Handoff
 
 ### Completed design work
 
-- `frontend/app/components/Logo.tsx` is the official brand logo component rendering the Geist Option B stylized P icon and wordmark (`#0F172A` primary, `#7CE3FF` cyan accent), integrated into `Navbar.tsx`, `login/page.tsx`, and browser tab metadata in `layout.tsx`.
+- `frontend/app/components/Logo.tsx` is the official brand logo component rendering the Geist Option B stylized P icon and wordmark (`#0F172A` primary, `#7CE3FF` cyan accent), integrated into `Navbar.tsx`, `login/page.tsx`, `LandingPage.tsx`, and browser tab metadata in `layout.tsx`.
 - `frontend/app/components/Navbar.tsx` is now the responsive shared app shell.
   It uses desktop navigation, mobile menu, Lucide icons, and keeps primary
   navigation focused on Compose, Contacts, Templates, History, and Settings.
+- `frontend/app/components/LandingPage.tsx` is the official landing page component
+  built from `docs/Landing_page.md` with an interactive product preview, before/after
+  value proposition comparison, 4 feature cards, 3-step workflow, trust block, and footer.
 - `frontend/app/login/page.tsx` is a 50/50 split-screen login page featuring a
   dark primary panel with brand tagline, a white surface with Google OAuth CTA,
   and search-param based logout toast handling.
-- `frontend/app/page.tsx` is a populated dashboard featuring a collapsed single-line
-  hero, a Recent Activity list layer (from `/history/`), a Recent Contacts strip (from `/contacts/`),
-  quiet empty states for new users, and unauthenticated redirect to `/login`.
-- `frontend/app/settings/page.tsx` now includes a Session & Security section with
+- `frontend/app/page.tsx` renders the full `LandingPage` for unauthenticated visitors
+  and the populated Dashboard workspace for authenticated users.
+- `frontend/app/settings/page.tsx` includes a Session & Security section with
   toast-based logout redirecting to `/login?logout=true`.
 - `frontend/app/globals.css` defines `--color-primary` (`#0F172A`) and `--color-accent` (`#7CE3FF`)
-  tokens in Tailwind v4 `@theme inline`.
-- `frontend/app/generate/page.tsx` is the reference implementation for the
-  new workflow layout: visible labels, focused primary action, contextual
-  information, loading/error/empty states, and copy-success feedback.
-- `lucide-react` is installed in `frontend/package.json`. Use Lucide icons
-  only; never add emoji or a second icon library.
+  tokens in Tailwind v4 `@theme inline`, keyframes (`fadeInUp`, `slideDownFade`, `scaleIn`), and animation utilities.
 
-### Required design rules
+### UI/UX Improvement Guidelines & Standard Rules
 
-- Read `docs/brand/AI_Agent_Design_Checklist.md` and use the `design-checklist`
-  skill before changing frontend pages or components.
-- Use Geist and only these brand colors: primary `#0F172A`, accent `#7CE3FF`,
-  background `#F8FAFC`, and white `#FFFFFF` surfaces.
-- Use Compose, Improve, and Review language. Never use “AI Generator”, “AI
-  Rewrite”, “AI Magic”, robot imagery, sparkles, gradients, or generic chatbot UI.
-- Give every form visible labels and every async action loading, error, and
-  success/empty feedback. Keep desktop layouts spacious and simplify navigation
-  for mobile.
+1. **Dashboard Command Center Enhancements:**
+   - Keep the single-line welcome hero clean, but add a 3-part summary metric strip (Total Contacts, Messages Composed, Active Tone Profile).
+   - Card grid must use high-contrast surfaces (`bg-white border border-slate-200`), 44px min touch targets, and hover micro-elevations (`hover:-translate-y-1 hover:shadow-md`).
+   - Recent Activity and Recent Contacts strips must include quick action links ("Compose email to X", "View history detail").
+
+2. **Scroll-Driven Animation Rules:**
+   - Use `animate-fade-in-up`, `animate-slide-down-fade`, and `animate-stagger-1..4` utilities on section entrances.
+   - Enforce smooth scrolling behavior (`html { scroll-behavior: smooth; }`).
+   - Respect `prefers-reduced-motion: reduce` across all animated components to prevent motion sickness.
+
+3. **Hover & Micro-Interaction Rules:**
+   - Every interactive element (buttons, cards, inputs, tabs, contact pills) MUST have explicit hover feedback:
+     - Buttons: `hover:-translate-y-0.5 hover:shadow-sm active:scale-[0.98] transition-all duration-150`
+     - Cards: `hover:-translate-y-1 hover:shadow-md hover:border-slate-300 transition-all duration-200`
+     - Icons inside buttons/cards: `group-hover:translate-x-0.5 transition-transform`
+   - Always specify `cursor-pointer` on clickable custom elements.
+
+4. **Loading & Async Feedback Rules:**
+   - Replace plain static grey blocks with shimmer pulse skeletons (`bg-slate-200 animate-pulse rounded-2xl`).
+   - Every primary action button (e.g. Generate Email, Rewrite, Review, Save Contact) MUST display a loading state with an animated spinner (`animate-spin h-4 w-4 mr-2`) and descriptive progress copy (e.g., "Analyzing relationship tone...", "Composing email...").
+   - Prevent layout shifts by giving loading state containers matching min-height dimensions.
 
 ### UI validation
 
