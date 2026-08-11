@@ -16,11 +16,14 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins(self) -> list[str]:
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        origins = [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        if self.FRONTEND_URL and self.FRONTEND_URL.strip() not in origins:
+            origins.append(self.FRONTEND_URL.strip())
+        return origins
 
     @property
     def is_production(self) -> bool:
-        return self.ENVIRONMENT == "production"
+        return self.ENVIRONMENT.lower() == "production" or self.BACKEND_URL.startswith("https://")
 
     class Config:
         env_file = ".env"
