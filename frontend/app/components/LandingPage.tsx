@@ -78,7 +78,7 @@ function LandingPageContent() {
       {/* Signed Out Confirmation Toast */}
       {loggedOut && !dismissToast && (
         <div
-          className="sticky top-20 z-50 mx-auto my-3 flex max-w-md items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-white/95 px-4 py-3 text-sm font-medium text-sky-900 shadow-lg backdrop-blur-md animate-slide-down-fade"
+          className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex w-[90%] max-w-md items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-white/95 px-4 py-3 text-sm font-medium text-sky-900 shadow-xl backdrop-blur-md animate-slide-down-fade"
           role="status"
         >
           <div className="flex items-center gap-2.5">

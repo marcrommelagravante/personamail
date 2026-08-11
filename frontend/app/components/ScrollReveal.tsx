@@ -21,7 +21,7 @@ export default function ScrollReveal({
   distancePx = 32,
   scale = 0.95,
   durationMs = 500,
-  once = true,
+  once = false,
 }: ScrollRevealProps) {
   const [isVisible, setIsVisible] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -35,7 +35,7 @@ export default function ScrollReveal({
 
   useEffect(() => {
     const element = ref.current;
-    if (!element || isVisible) return;
+    if (!element) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -58,7 +58,7 @@ export default function ScrollReveal({
     return () => {
       observer.disconnect();
     };
-  }, [once, isVisible]);
+  }, [once]);
 
   const getTransform = () => {
     if (isVisible) return "translate(0px, 0px) scale(1)";
