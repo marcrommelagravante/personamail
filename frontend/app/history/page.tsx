@@ -383,10 +383,10 @@ export default function HistoryPage() {
                               e.stopPropagation();
                               handleDeleteClick(item);
                             }}
-                            className="inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-slate-500 transition hover:bg-red-50 hover:text-red-600 cursor-pointer"
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50/50 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-100/80 cursor-pointer"
                             title="Delete entry"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash2 className="h-3.5 w-3.5" /> Delete
                           </button>
                         </div>
                       </article>
