@@ -297,21 +297,23 @@ function HomeContent() {
                   <Link
                     key={action.href}
                     href={action.href}
-                    className="group cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+                    className="group flex flex-col justify-between cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
                   >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-primary transition-transform group-hover:scale-105">
-                      <Icon className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <h3 className="mt-4 font-semibold text-primary">
-                      {action.title}
-                    </h3>
-                    <p className="mt-1.5 text-sm leading-6 text-slate-600">
-                      {action.description}
-                    </p>
-                    <p className="mt-2 text-xs text-sky-700 font-medium">
-                      {action.hint}
-                    </p>
-                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-slate-700 group-hover:text-primary">
+                    <div>
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-primary transition-transform group-hover:scale-105">
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                      <h3 className="mt-4 font-semibold text-primary">
+                        {action.title}
+                      </h3>
+                      <p className="mt-1.5 text-sm leading-6 text-slate-600">
+                        {action.description}
+                      </p>
+                      <p className="mt-2 text-xs font-medium text-sky-700">
+                        {action.hint}
+                      </p>
+                    </div>
+                    <span className="mt-6 pt-2 inline-flex items-center gap-1 text-sm font-semibold text-slate-700 group-hover:text-primary">
                       Open {action.title}{" "}
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                     </span>

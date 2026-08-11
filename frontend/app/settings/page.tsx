@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { API_URL, fetchWithAuth } from "../lib/api";
@@ -14,7 +13,6 @@ const initialSettings = {
 const API = API_URL;
 
 export default function SettingsPage() {
-  const router = useRouter();
   const [settings, setSettings] = useState(initialSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -72,20 +70,6 @@ export default function SettingsPage() {
     } finally {
       setSaving(false);
     }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await fetchWithAuth(`${API}/auth/logout`, {
-        method: "POST",
-      });
-    } catch {
-      // Ignore network errors on logout redirect
-    }
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("personamail_token");
-    }
-    router.push("/?logout=true");
   };
 
   const inputClass =
@@ -211,22 +195,6 @@ export default function SettingsPage() {
                 {saving ? "Saving defaults…" : "Save defaults"}
               </button>
             </form>
-
-            <div className="animate-fade-in-up animate-stagger-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6">
-              <h2 className="text-base font-semibold text-slate-900">
-                Session & Security
-              </h2>
-              <p className="mt-1 text-sm text-slate-600">
-                Sign out of your PersonaMail workspace on this browser.
-              </p>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="mt-4 inline-flex cursor-pointer items-center justify-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-red-700 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-              >
-                Sign out of PersonaMail
-              </button>
-            </div>
           </div>
         )}
       </main>
