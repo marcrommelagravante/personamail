@@ -102,7 +102,7 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Verify frontend static & dynamic production compilation (`npm run lint` & `npm run build` passing with 0 errors and 0 warnings)
 - [x] Implement pre-deployment security hardening: anti-CSRF `state` parameter cookie validation in `backend/routers/auth.py` and dedicated `/api/health` endpoint in `backend/main.py`
 - [x] Push latest code changes (`main` branch) to GitHub repository `marcrommelagravante/personamail`
-- [x] Add root `vercel.json` configuration to resolve Vercel deployment auto-detection for subfolder Next.js app
+- [x] Configure Vercel project with Root Directory `frontend` to natively build Next.js app
 - [x] Complete cloud service deployment on Render (Backend) and Vercel (Frontend)
 
 
