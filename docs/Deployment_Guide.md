@@ -12,7 +12,7 @@ User Device (Phone / Laptop / Tablet)
           ▼
 ┌──────────────────────────────────────┐
 │  Frontend (Vercel)                   │
-│  https://personamail.vercel.app      │
+│  https://personamail-coral.vercel.app│
 └──────────────────┬───────────────────┘
                    │  REST API + Cookies
                    ▼
@@ -59,9 +59,9 @@ Render hosts the FastAPI backend server 24/7 in the cloud.
    - `GOOGLE_CLIENT_ID` = `<your Google OAuth Client ID>`
    - `GOOGLE_CLIENT_SECRET` = `<your Google OAuth Client Secret>`
    - `SECRET_KEY` = `<generate a secure random 32-char string>`
-   - `FRONTEND_URL` = `https://<your-vercel-app-name>.vercel.app`
+   - `FRONTEND_URL` = `https://personamail-coral.vercel.app`
    - `BACKEND_URL` = `https://<your-render-app-name>.onrender.com`
-   - `CORS_ORIGINS` = `https://<your-vercel-app-name>.vercel.app`
+   - `CORS_ORIGINS` = `https://personamail-coral.vercel.app`
 
 ---
 
