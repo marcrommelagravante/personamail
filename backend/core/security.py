@@ -19,9 +19,21 @@ def decode_access_token(token: str):
     except Exception:
         return None
 
+def get_token_from_request(request: Request) -> str | None:
+    token = request.cookies.get("access_token")
+    if token:
+        return token
+
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        return auth_header.split(" ", 1)[1]
+
+    return request.query_params.get("token")
+
+
 def get_current_user_dependency(request: Request, db: Session = Depends(get_db)):
     from models.user import User  # local import avoids circular import
-    token = request.cookies.get("access_token")
+    token = get_token_from_request(request)
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
     payload = decode_access_token(token)

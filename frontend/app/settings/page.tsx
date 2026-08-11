@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { API_URL } from "../lib/api";
+import { API_URL, fetchWithAuth } from "../lib/api";
 
 const initialSettings = {
   default_tone: "formal",
@@ -26,8 +26,8 @@ export default function SettingsPage() {
     const loadPage = async () => {
       try {
         const [authResponse, settingsResponse] = await Promise.all([
-          fetch(`${API}/auth/me`, { credentials: "include" }),
-          fetch(`${API}/settings/`, { credentials: "include" }),
+          fetchWithAuth(`${API}/auth/me`),
+          fetchWithAuth(`${API}/settings/`),
         ]);
         if (!authResponse.ok) {
           setIsAuthenticated(false);
@@ -56,9 +56,8 @@ export default function SettingsPage() {
     setSuccess("");
     setSaving(true);
     try {
-      const response = await fetch(`${API}/settings/`, {
+      const response = await fetchWithAuth(`${API}/settings/`, {
         method: "PUT",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...settings,
@@ -77,12 +76,14 @@ export default function SettingsPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${API}/auth/logout`, {
+      await fetchWithAuth(`${API}/auth/logout`, {
         method: "POST",
-        credentials: "include",
       });
     } catch {
       // Ignore network errors on logout redirect
+    }
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("personamail_token");
     }
     router.push("/login?logout=true");
   };

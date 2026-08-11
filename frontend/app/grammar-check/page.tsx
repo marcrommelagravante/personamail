@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { API_URL } from "../lib/api";
+import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   CheckCircle2,
   Copy,
@@ -32,9 +32,8 @@ export default function GrammarCheckPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API}/email/grammar-check`, {
+      const res = await fetchWithAuth(`${API}/email/grammar-check`, {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
       });

@@ -4,7 +4,7 @@ import { Check, Copy, Loader2, Mail, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { API_URL } from "../lib/api";
+import { API_URL, fetchWithAuth } from "../lib/api";
 
 type Contact = { id: string; name: string; relationship: string; tone: string };
 type Message = { subject: string; body: string };
@@ -22,7 +22,7 @@ export default function GeneratePage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`${API}/contacts/`, { credentials: "include" })
+    fetchWithAuth(`${API}/contacts/`)
       .then((response) => {
         if (!response.ok) throw new Error("Could not load contacts");
         return response.json();
@@ -48,9 +48,8 @@ export default function GeneratePage() {
     }
     setLoading(true);
     try {
-      const response = await fetch(`${API}/email/generate`, {
+      const response = await fetchWithAuth(`${API}/email/generate`, {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contact_id: contactId, purpose }),
       });

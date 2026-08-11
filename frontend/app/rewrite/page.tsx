@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { API_URL } from "../lib/api";
+import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   RefreshCw,
   Copy,
@@ -36,7 +36,7 @@ export default function RewritePage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`${API}/contacts/`, { credentials: "include" })
+    fetchWithAuth(`${API}/contacts/`)
       .then((res) => res.json())
       .then((data) => setContacts(data))
       .catch(() => {
@@ -56,9 +56,8 @@ export default function RewritePage() {
 
     setLoading(true);
     try {
-      const res = await fetch(`${API}/email/rewrite`, {
+      const res = await fetchWithAuth(`${API}/email/rewrite`, {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contact_id: contactId,

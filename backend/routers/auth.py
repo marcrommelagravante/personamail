@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from core.config import settings
 from core.db import get_db
-from core.security import create_access_token, decode_access_token
+from core.security import create_access_token, decode_access_token, get_current_user_dependency
 from models.user import User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -96,7 +96,7 @@ async def google_callback(
     jwt_token = create_access_token(str(user.id), str(user.email))
 
     frontend_base = settings.FRONTEND_URL.rstrip("/")
-    response = RedirectResponse(f"{frontend_base}/?login=success")
+    response = RedirectResponse(f"{frontend_base}/?login=success&token={jwt_token}")
     response.set_cookie(
         key="access_token",
         value=jwt_token,
@@ -111,16 +111,7 @@ async def google_callback(
 
 
 @router.get("/me")
-def get_current_user(request: Request, db: Session = Depends(get_db)):
-    token = request.cookies.get("access_token")
-    if not token:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    payload = decode_access_token(token)
-    if not payload:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    user = db.query(User).filter(User.id == payload["sub"]).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+def get_current_user(user: User = Depends(get_current_user_dependency)):
     return {
         "id": str(user.id),
         "email": user.email,

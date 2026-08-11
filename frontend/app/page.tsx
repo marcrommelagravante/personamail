@@ -20,7 +20,7 @@ import {
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { API_URL } from "./lib/api";
+import { API_URL, fetchWithAuth } from "./lib/api";
 
 import LandingPage from "./components/LandingPage";
 
@@ -102,9 +102,17 @@ export default function Home() {
   useEffect(() => {
     const loadDashboard = async () => {
       try {
-        const authRes = await fetch(`${API_URL}/auth/me`, {
-          credentials: "include",
-        });
+        if (typeof window !== "undefined") {
+          const urlParams = new URLSearchParams(window.location.search);
+          const tokenFromUrl = urlParams.get("token");
+          if (tokenFromUrl) {
+            localStorage.setItem("personamail_token", tokenFromUrl);
+            const cleanUrl = window.location.pathname + "?login=success";
+            window.history.replaceState({}, "", cleanUrl);
+          }
+        }
+
+        const authRes = await fetchWithAuth(`${API_URL}/auth/me`);
         if (!authRes.ok) {
           setUser(null);
           return;
@@ -114,8 +122,8 @@ export default function Home() {
 
         // Fetch contacts & history in parallel for dashboard state layer
         const [contactsRes, historyRes] = await Promise.allSettled([
-          fetch(`${API_URL}/contacts/`, { credentials: "include" }),
-          fetch(`${API_URL}/history/`, { credentials: "include" }),
+          fetchWithAuth(`${API_URL}/contacts/`),
+          fetchWithAuth(`${API_URL}/history/`),
         ]);
 
         if (contactsRes.status === "fulfilled" && contactsRes.value.ok) {

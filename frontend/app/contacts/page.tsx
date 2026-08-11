@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { API_URL } from "../lib/api";
+import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   Plus,
   User,
@@ -51,7 +51,7 @@ export default function ContactsPage() {
   const fetchContacts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/contacts/`, { credentials: "include" });
+      const res = await fetchWithAuth(`${API}/contacts/`);
       if (!res.ok) throw new Error("Could not load contacts");
       setContacts(await res.json());
     } catch {
@@ -86,9 +86,7 @@ export default function ContactsPage() {
   const startNewContact = async () => {
     resetForm();
     try {
-      const response = await fetch(`${API}/settings/`, {
-        credentials: "include",
-      });
+      const response = await fetchWithAuth(`${API}/settings/`);
       if (response.ok) {
         const settings = await response.json();
         setForm({
@@ -113,9 +111,8 @@ export default function ContactsPage() {
     const method = editingId ? "PUT" : "POST";
 
     try {
-      const res = await fetch(url, {
+      const res = await fetchWithAuth(url, {
         method,
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
@@ -146,9 +143,8 @@ export default function ContactsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this contact?")) return;
     try {
-      const res = await fetch(`${API}/contacts/${id}`, {
+      const res = await fetchWithAuth(`${API}/contacts/${id}`, {
         method: "DELETE",
-        credentials: "include",
       });
       if (!res.ok) throw new Error("Could not delete contact");
       await fetchContacts();

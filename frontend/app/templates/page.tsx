@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { API_URL } from "../lib/api";
+import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   FileText,
   Plus,
@@ -47,9 +47,7 @@ export default function TemplatesPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const loadTemplates = async () => {
-    const response = await fetch(`${API}/templates/`, {
-      credentials: "include",
-    });
+    const response = await fetchWithAuth(`${API}/templates/`);
     if (!response.ok) throw new Error("Could not load templates");
     setTemplates(await response.json());
   };
@@ -58,8 +56,8 @@ export default function TemplatesPage() {
     const loadPage = async () => {
       try {
         const [authResponse, templatesResponse] = await Promise.all([
-          fetch(`${API}/auth/me`, { credentials: "include" }),
-          fetch(`${API}/templates/`, { credentials: "include" }),
+          fetchWithAuth(`${API}/auth/me`),
+          fetchWithAuth(`${API}/templates/`),
         ]);
         if (!authResponse.ok) {
           setIsAuthenticated(false);
@@ -93,9 +91,8 @@ export default function TemplatesPage() {
     const method = editingId ? "PUT" : "POST";
 
     try {
-      const response = await fetch(url, {
+      const response = await fetchWithAuth(url, {
         method,
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
@@ -129,9 +126,8 @@ export default function TemplatesPage() {
     if (!confirm("Delete this template?")) return;
     setError("");
     try {
-      const response = await fetch(`${API}/templates/${id}`, {
+      const response = await fetchWithAuth(`${API}/templates/${id}`, {
         method: "DELETE",
-        credentials: "include",
       });
       if (!response.ok) throw new Error("Could not delete template");
       await loadTemplates();

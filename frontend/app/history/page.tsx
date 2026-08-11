@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { API_URL } from "../lib/api";
+import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   Clock,
   PenTool,
@@ -45,7 +45,7 @@ export default function HistoryPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const loadHistory = async () => {
-    const response = await fetch(`${API}/history/`, { credentials: "include" });
+    const response = await fetchWithAuth(`${API}/history/`);
     if (!response.ok) throw new Error("Could not load history");
     const data = await response.json();
     setItems(data);
@@ -62,8 +62,8 @@ export default function HistoryPage() {
     const loadPage = async () => {
       try {
         const [authResponse, historyResponse] = await Promise.all([
-          fetch(`${API}/auth/me`, { credentials: "include" }),
-          fetch(`${API}/history/`, { credentials: "include" }),
+          fetchWithAuth(`${API}/auth/me`),
+          fetchWithAuth(`${API}/history/`),
         ]);
         if (!authResponse.ok) {
           setIsAuthenticated(false);
@@ -85,9 +85,8 @@ export default function HistoryPage() {
     if (!confirm("Delete this history item?")) return;
     setError("");
     try {
-      const response = await fetch(`${API}/history/${id}`, {
+      const response = await fetchWithAuth(`${API}/history/${id}`, {
         method: "DELETE",
-        credentials: "include",
       });
       if (!response.ok) throw new Error("Could not delete history item");
       await loadHistory();
