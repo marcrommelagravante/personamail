@@ -428,9 +428,6 @@ function HomeContent() {
                       <span className="text-xs text-slate-500">
                         {formatRelativeTime(item.created_at)}
                       </span>
-                      <span className="text-xs font-semibold text-sky-700 opacity-0 transition-opacity group-hover:opacity-100">
-                        Preview
-                      </span>
                     </div>
                   </div>
                 ))}

@@ -19,7 +19,6 @@ import {
   AlertTriangle,
   Loader2,
   Search,
-  ArrowRight,
 } from "lucide-react";
 
 type Activity = {
@@ -389,9 +388,6 @@ export default function HistoryPage() {
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
-                          <span className="hidden sm:inline-flex items-center gap-0.5 text-xs font-semibold text-sky-700 opacity-0 transition-opacity group-hover:opacity-100">
-                            Preview <ArrowRight className="h-3 w-3" />
-                          </span>
                         </div>
                       </article>
                     );
