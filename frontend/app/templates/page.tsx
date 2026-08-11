@@ -14,6 +14,8 @@ import {
   X,
   Loader2,
   AlertCircle,
+  AlertTriangle,
+  CheckCircle2,
 } from "lucide-react";
 
 type Template = {
@@ -135,17 +137,49 @@ export default function TemplatesPage() {
     setShowForm(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this template?")) return;
+  const [deletingTemplate, setDeletingTemplate] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  useEffect(() => {
+    if (!deletingTemplate) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDeletingTemplate(null);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [deletingTemplate]);
+
+  const handleDeleteClick = (template: Template) => {
+    setDeletingTemplate({ id: template.id, name: template.name });
+  };
+
+  const confirmDeleteTemplate = async () => {
+    if (!deletingTemplate) return;
+    setIsDeleting(true);
     setError("");
     try {
-      const response = await fetchWithAuth(`${API}/templates/${id}`, {
+      const response = await fetchWithAuth(`${API}/templates/${deletingTemplate.id}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Could not delete template");
+      const name = deletingTemplate.name;
+      setDeletingTemplate(null);
       await loadTemplates();
+      showToast(`Template "${name}" deleted`);
     } catch {
       setError("We couldn’t delete this template. Please try again.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -446,8 +480,8 @@ export default function TemplatesPage() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => void handleDelete(template.id)}
-                        className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600"
+                        onClick={() => handleDeleteClick(template)}
+                        className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600 cursor-pointer"
                       >
                         <Trash2 className="h-3.5 w-3.5" /> Delete
                       </button>
@@ -460,6 +494,74 @@ export default function TemplatesPage() {
         )}
       </main>
       <Footer />
+
+      {/* Delete Confirmation Modal */}
+      {deletingTemplate && (
+        <div
+          aria-modal="true"
+          aria-labelledby="delete-template-modal-title"
+          role="dialog"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 sm:p-6 backdrop-blur-sm animate-fade-in-up"
+          onClick={() => setDeletingTemplate(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-scale-in space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+                <AlertTriangle className="h-6 w-6" />
+              </div>
+              <div className="space-y-1">
+                <h3 id="delete-template-modal-title" className="text-base font-semibold text-slate-900">
+                  Delete Template Blueprint?
+                </h3>
+                <p className="text-xs leading-relaxed text-slate-600">
+                  Are you sure you want to delete <span className="font-semibold text-slate-900">{deletingTemplate.name}</span>? You will no longer be able to select this template blueprint for email generation.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setDeletingTemplate(null)}
+                className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => void confirmDeleteTemplate()}
+                className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-700 active:scale-[0.98] disabled:opacity-50 cursor-pointer shadow-xs"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> Deleting…
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-3.5 w-3.5" /> Delete template
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div
+          role="status"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-900 px-4 py-3 text-xs font-medium text-white shadow-2xl animate-slide-down-fade"
+        >
+          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+          <span>{toast}</span>
+        </div>
+      )}
     </>
   );
 }

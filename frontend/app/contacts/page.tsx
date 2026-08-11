@@ -12,6 +12,8 @@ import {
   Trash2,
   X,
   AlertCircle,
+  AlertTriangle,
+  CheckCircle2,
   Loader2,
   Check,
 } from "lucide-react";
@@ -154,16 +156,49 @@ export default function ContactsPage() {
     setShowForm(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this contact?")) return;
+  const [deletingContact, setDeletingContact] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  useEffect(() => {
+    if (!deletingContact) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDeletingContact(null);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [deletingContact]);
+
+  const handleDeleteClick = (contact: Contact) => {
+    setDeletingContact({ id: contact.id, name: contact.name });
+  };
+
+  const confirmDeleteContact = async () => {
+    if (!deletingContact) return;
+    setIsDeleting(true);
+    setError("");
     try {
-      const res = await fetchWithAuth(`${API}/contacts/${id}`, {
+      const res = await fetchWithAuth(`${API}/contacts/${deletingContact.id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Could not delete contact");
+      const name = deletingContact.name;
+      setDeletingContact(null);
       await fetchContacts();
+      showToast(`Contact "${name}" deleted`);
     } catch {
       setError("We couldn’t delete this contact. Please try again.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -466,8 +501,8 @@ export default function ContactsPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => void handleDelete(contact.id)}
-                    className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600"
+                    onClick={() => handleDeleteClick(contact)}
+                    className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600 cursor-pointer"
                   >
                     <Trash2 className="h-3.5 w-3.5" /> Delete
                   </button>
@@ -478,6 +513,74 @@ export default function ContactsPage() {
         )}
       </main>
       <Footer />
+
+      {/* Delete Confirmation Modal */}
+      {deletingContact && (
+        <div
+          aria-modal="true"
+          aria-labelledby="delete-modal-title"
+          role="dialog"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 sm:p-6 backdrop-blur-sm animate-fade-in-up"
+          onClick={() => setDeletingContact(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-scale-in space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+                <AlertTriangle className="h-6 w-6" />
+              </div>
+              <div className="space-y-1">
+                <h3 id="delete-modal-title" className="text-base font-semibold text-slate-900">
+                  Delete Contact Profile?
+                </h3>
+                <p className="text-xs leading-relaxed text-slate-600">
+                  Are you sure you want to delete <span className="font-semibold text-slate-900">{deletingContact.name}</span>? PersonaMail will no longer adapt tone and style for this contact profile.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setDeletingContact(null)}
+                className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => void confirmDeleteContact()}
+                className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-700 active:scale-[0.98] disabled:opacity-50 cursor-pointer shadow-xs"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> Deleting…
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-3.5 w-3.5" /> Delete contact
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div
+          role="status"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-900 px-4 py-3 text-xs font-medium text-white shadow-2xl animate-slide-down-fade"
+        >
+          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+          <span>{toast}</span>
+        </div>
+      )}
     </>
   );
 }
