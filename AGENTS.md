@@ -115,6 +115,7 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Make Quick Action cards (Compose, Improve, Review) on Dashboard (`frontend/app/page.tsx`) strictly symmetrical using `flex flex-col justify-between h-full` and baseline-aligned bottom CTA links (`mt-6 pt-2`).
 - [x] Refine History & Activity row cards: remove hidden `opacity-0` Preview text to eliminate right-side whitespace gaps, and upgrade History row delete action button to an explicit `[Trash Icon] Delete` text button (`frontend/app/history/page.tsx`).
 - [x] Replace default Vercel favicon with official PersonaMail SVG/PNG brand icon in Next.js App Router metadata (`frontend/app/icon.svg`, `frontend/app/favicon.ico`, `frontend/app/layout.tsx`).
+- [x] Overhaul Google Sign-In layout & Logout confirmation modal with intermediate loading animations: created `LoginModal.tsx` and `LogoutModal.tsx` components with account selection loading transition (*"Connecting to Google Workspace..."*), user profile preview card, animated sign-out transition (*"Securing session & signing out..."*), full accessibility controls, and verified zero-error `npm run lint` & `npm run build`.
 
 
 

@@ -193,7 +193,7 @@ function HomeContent() {
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user} />
       <main className="mx-auto w-full flex-1 max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="space-y-8">
           {/* Hero Banner */}

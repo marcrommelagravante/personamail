@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import LoginModal from "../components/LoginModal";
 import { API_URL, fetchWithAuth } from "../lib/api";
 
 const initialSettings = {
@@ -19,6 +20,7 @@ export default function SettingsPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -93,10 +95,17 @@ export default function SettingsPage() {
         </div>
         {!isAuthenticated ? (
           <div className="animate-scale-in rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs">
-            <h2 className="font-semibold">Sign in to manage settings</h2>
+            <h2 className="font-semibold text-primary text-lg">Sign in to manage settings</h2>
             <p className="mt-2 text-sm text-slate-600">
               Your communication defaults stay private to your account.
             </p>
+            <button
+              type="button"
+              onClick={() => setShowLoginModal(true)}
+              className="mt-5 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-slate-800"
+            >
+              Sign in with Google
+            </button>
           </div>
         ) : loading ? (
           <p className="text-sm text-slate-500">Loading settings…</p>
@@ -199,6 +208,10 @@ export default function SettingsPage() {
         )}
       </main>
       <Footer />
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </>
   );
 }

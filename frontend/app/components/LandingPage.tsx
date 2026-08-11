@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   ArrowRight,
@@ -15,6 +14,7 @@ import {
 import { Suspense, useState } from "react";
 import Logo from "./Logo";
 import ScrollReveal from "./ScrollReveal";
+import LoginModal from "./LoginModal";
 
 type SampleProfile = {
   id: string;
@@ -65,6 +65,7 @@ function LandingPageContent() {
   const searchParams = useSearchParams();
   const loggedOut = searchParams.get("logout") === "true";
   const [dismissToast, setDismissToast] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const [activeProfile, setActiveProfile] = useState<SampleProfile>(
     sampleProfiles[0],
@@ -125,21 +126,24 @@ function LandingPageContent() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/login"
+            <button
+              type="button"
+              onClick={() => setShowLoginModal(true)}
               className="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-primary"
             >
               Sign in
-            </Link>
-            <Link
-              href="/login"
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowLoginModal(true)}
               className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-sm"
             >
               Get Started
-            </Link>
+            </button>
           </div>
         </div>
       </header>
+
 
       {/* 2. Hero Section (Combined with Prominent Product Preview) */}
       <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24">
@@ -166,8 +170,9 @@ function LandingPageContent() {
             </p>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
-              <Link
-                href="/login"
+              <button
+                type="button"
+                onClick={() => setShowLoginModal(true)}
                 className="group inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md sm:w-auto"
               >
                 Get Started
@@ -175,7 +180,7 @@ function LandingPageContent() {
                   className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
                   aria-hidden="true"
                 />
-              </Link>
+              </button>
               <a
                 href="#how-it-works"
                 className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50 hover:text-primary sm:w-auto"
@@ -555,13 +560,14 @@ function LandingPageContent() {
             </p>
 
             <div className="mt-8 flex justify-center">
-              <Link
-                href="/login"
+              <button
+                type="button"
+                onClick={() => setShowLoginModal(true)}
                 className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent px-8 py-4 text-base font-semibold text-primary transition-all hover:-translate-y-0.5 hover:bg-sky-200 hover:shadow-lg"
               >
                 Get Started
                 <ArrowRight className="h-5 w-5" />
-              </Link>
+              </button>
             </div>
           </ScrollReveal>
         </div>
@@ -586,24 +592,40 @@ function LandingPageContent() {
                   </p>
                   <ul className="mt-3 space-y-2">
                     <li>
-                      <Link href="/login" className="hover:text-white">
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginModal(true)}
+                        className="cursor-pointer hover:text-white"
+                      >
                         Compose
-                      </Link>
+                      </button>
                     </li>
                     <li>
-                      <Link href="/login" className="hover:text-white">
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginModal(true)}
+                        className="cursor-pointer hover:text-white"
+                      >
                         Contacts
-                      </Link>
+                      </button>
                     </li>
                     <li>
-                      <Link href="/login" className="hover:text-white">
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginModal(true)}
+                        className="cursor-pointer hover:text-white"
+                      >
                         Improve
-                      </Link>
+                      </button>
                     </li>
                     <li>
-                      <Link href="/login" className="hover:text-white">
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginModal(true)}
+                        className="cursor-pointer hover:text-white"
+                      >
                         Review
-                      </Link>
+                      </button>
                     </li>
                   </ul>
                 </div>
@@ -652,6 +674,12 @@ function LandingPageContent() {
           </ScrollReveal>
         </div>
       </footer>
+
+      {/* Login Modal Overlay */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </div>
   );
 }
@@ -663,3 +691,4 @@ export default function LandingPage() {
     </Suspense>
   );
 }
+
