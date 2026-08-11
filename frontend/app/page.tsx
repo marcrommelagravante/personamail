@@ -104,6 +104,9 @@ export default function Home() {
       try {
         if (typeof window !== "undefined") {
           const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get("logout") === "true") {
+            localStorage.removeItem("personamail_token");
+          }
           const tokenFromUrl = urlParams.get("token");
           if (tokenFromUrl) {
             localStorage.setItem("personamail_token", tokenFromUrl);

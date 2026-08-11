@@ -85,7 +85,7 @@ export default function SettingsPage() {
     if (typeof window !== "undefined") {
       localStorage.removeItem("personamail_token");
     }
-    router.push("/login?logout=true");
+    router.push("/?logout=true");
   };
 
   const inputClass =
