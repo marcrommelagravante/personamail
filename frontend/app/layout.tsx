@@ -17,11 +17,10 @@ export const metadata: Metadata = {
   description: "Compose thoughtful messages for every relationship.",
   icons: {
     icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/logo-icon-dark-transparent.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
     ],
     shortcut: "/favicon.ico",
-    apple: "/logo-icon-dark-transparent.png",
+    apple: "/icon.png",
   },
 };
 
