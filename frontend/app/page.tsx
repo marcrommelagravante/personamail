@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
@@ -17,7 +18,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { API_URL, fetchWithAuth } from "./lib/api";
@@ -91,7 +92,10 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase();
 }
 
-export default function Home() {
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const isLogout = searchParams.get("logout") === "true";
+
   const [user, setUser] = useState<User | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [activity, setActivity] = useState<ActivityItem[]>([]);
@@ -100,16 +104,17 @@ export default function Home() {
   const [copiedPreview, setCopiedPreview] = useState(false);
 
   useEffect(() => {
+    if (isLogout) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("personamail_token");
+      }
+      return;
+    }
+
     const loadDashboard = async () => {
       try {
         if (typeof window !== "undefined") {
           const urlParams = new URLSearchParams(window.location.search);
-          if (urlParams.get("logout") === "true") {
-            localStorage.removeItem("personamail_token");
-            setUser(null);
-            setLoading(false);
-            return;
-          }
           const tokenFromUrl = urlParams.get("token");
           if (tokenFromUrl) {
             localStorage.setItem("personamail_token", tokenFromUrl);
@@ -149,7 +154,7 @@ export default function Home() {
     };
 
     void loadDashboard();
-  }, []);
+  }, [isLogout]);
 
   useEffect(() => {
     if (!previewItem) return;
@@ -173,12 +178,15 @@ export default function Home() {
     setTimeout(() => setCopiedPreview(false), 2000);
   };
 
-  if (loading) {
-    return <DashboardSkeleton />;
+  if (isLogout || !user) {
+    if (loading && !isLogout) {
+      return <DashboardSkeleton />;
+    }
+    return <LandingPage />;
   }
 
-  if (!user) {
-    return <LandingPage />;
+  if (loading) {
+    return <DashboardSkeleton />;
   }
 
   const firstName = user.name.split(" ")[0];
@@ -650,3 +658,10 @@ function DashboardSkeleton() {
   );
 }
 
+export default function Home() {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <HomeContent />
+    </Suspense>
+  );
+}
