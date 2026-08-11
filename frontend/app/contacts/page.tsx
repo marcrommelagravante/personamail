@@ -84,6 +84,19 @@ export default function ContactsPage() {
     setShowForm(false);
   };
 
+  useEffect(() => {
+    if (!showForm) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") resetForm();
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showForm]);
+
   const startNewContact = async () => {
     resetForm();
     try {
@@ -194,160 +207,179 @@ export default function ContactsPage() {
         </div>
 
         {showForm && (
-          <form
-            onSubmit={handleSubmit}
-            className="animate-scale-in mb-8 grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2"
+          <div
+            aria-modal="true"
+            aria-labelledby="contact-modal-title"
+            role="dialog"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 sm:p-6 backdrop-blur-sm animate-fade-in-up"
+            onClick={resetForm}
           >
-            <div className="sm:col-span-2">
-              <h2 className="text-base font-semibold text-slate-900">
-                {editingId ? "Edit Contact Profile" : "New Contact Profile"}
-              </h2>
-              <p className="text-xs text-slate-500">
-                PersonaMail will automatically tailor email tone and phrasing to match this contact.
-              </p>
-            </div>
+            <form
+              onSubmit={handleSubmit}
+              onClick={(e) => e.stopPropagation()}
+              className="animate-scale-in w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl grid gap-4 sm:grid-cols-2"
+            >
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3 sm:col-span-2">
+                <div>
+                  <h2 id="contact-modal-title" className="text-base font-semibold text-slate-900">
+                    {editingId ? "Edit Contact Profile" : "New Contact Profile"}
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    PersonaMail will automatically tailor email tone and phrasing to match this contact.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition cursor-pointer"
+                  aria-label="Close modal"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
 
-            <div>
-              <label htmlFor="contact-name" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
-                Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="contact-name"
-                type="text"
-                placeholder="Jane Doe"
-                required
-                value={form.name}
-                onChange={(event) =>
-                  setForm({ ...form, name: event.target.value })
-                }
-                className={inputClass}
-              />
-            </div>
+              <div>
+                <label htmlFor="contact-name" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="contact-name"
+                  type="text"
+                  placeholder="Jane Doe"
+                  required
+                  value={form.name}
+                  onChange={(event) =>
+                    setForm({ ...form, name: event.target.value })
+                  }
+                  className={inputClass}
+                />
+              </div>
 
-            <div>
-              <label htmlFor="contact-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
-                Email
-              </label>
-              <input
-                id="contact-email"
-                type="email"
-                placeholder="jane@example.com"
-                value={form.email}
-                onChange={(event) =>
-                  setForm({ ...form, email: event.target.value })
-                }
-                className={inputClass}
-              />
-            </div>
+              <div>
+                <label htmlFor="contact-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  Email
+                </label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  placeholder="jane@example.com"
+                  value={form.email}
+                  onChange={(event) =>
+                    setForm({ ...form, email: event.target.value })
+                  }
+                  className={inputClass}
+                />
+              </div>
 
-            <div>
-              <label htmlFor="contact-relationship" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
-                Relationship <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="contact-relationship"
-                type="text"
-                placeholder="e.g. Professor, Client, Manager"
-                required
-                value={form.relationship}
-                onChange={(event) =>
-                  setForm({ ...form, relationship: event.target.value })
-                }
-                className={inputClass}
-              />
-            </div>
+              <div>
+                <label htmlFor="contact-relationship" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  Relationship <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="contact-relationship"
+                  type="text"
+                  placeholder="e.g. Professor, Client, Manager"
+                  required
+                  value={form.relationship}
+                  onChange={(event) =>
+                    setForm({ ...form, relationship: event.target.value })
+                  }
+                  className={inputClass}
+                />
+              </div>
 
-            <div>
-              <label htmlFor="contact-tone" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
-                Preferred Tone
-              </label>
-              <select
-                id="contact-tone"
-                value={form.tone}
-                onChange={(event) =>
-                  setForm({ ...form, tone: event.target.value })
-                }
-                className={inputClass}
-                aria-label="Preferred tone"
-              >
-                <option value="formal">Formal</option>
-                <option value="friendly">Friendly</option>
-                <option value="casual">Casual</option>
-              </select>
-            </div>
+              <div>
+                <label htmlFor="contact-tone" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  Preferred Tone
+                </label>
+                <select
+                  id="contact-tone"
+                  value={form.tone}
+                  onChange={(event) =>
+                    setForm({ ...form, tone: event.target.value })
+                  }
+                  className={inputClass}
+                  aria-label="Preferred tone"
+                >
+                  <option value="formal">Formal</option>
+                  <option value="friendly">Friendly</option>
+                  <option value="casual">Casual</option>
+                </select>
+              </div>
 
-            <div>
-              <label htmlFor="contact-greeting" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
-                Preferred Greeting
-              </label>
-              <input
-                id="contact-greeting"
-                type="text"
-                placeholder="e.g. Dear Dr. Smith,"
-                value={form.greeting}
-                onChange={(event) =>
-                  setForm({ ...form, greeting: event.target.value })
-                }
-                className={inputClass}
-              />
-            </div>
+              <div>
+                <label htmlFor="contact-greeting" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  Preferred Greeting
+                </label>
+                <input
+                  id="contact-greeting"
+                  type="text"
+                  placeholder="e.g. Dear Dr. Smith,"
+                  value={form.greeting}
+                  onChange={(event) =>
+                    setForm({ ...form, greeting: event.target.value })
+                  }
+                  className={inputClass}
+                />
+              </div>
 
-            <div>
-              <label htmlFor="contact-closing" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
-                Preferred Closing
-              </label>
-              <input
-                id="contact-closing"
-                type="text"
-                placeholder="e.g. Best regards,"
-                value={form.closing}
-                onChange={(event) =>
-                  setForm({ ...form, closing: event.target.value })
-                }
-                className={inputClass}
-              />
-            </div>
+              <div>
+                <label htmlFor="contact-closing" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  Preferred Closing
+                </label>
+                <input
+                  id="contact-closing"
+                  type="text"
+                  placeholder="e.g. Best regards,"
+                  value={form.closing}
+                  onChange={(event) =>
+                    setForm({ ...form, closing: event.target.value })
+                  }
+                  className={inputClass}
+                />
+              </div>
 
-            <div className="sm:col-span-2">
-              <label htmlFor="contact-notes" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
-                Notes & Communication Preferences
-              </label>
-              <textarea
-                id="contact-notes"
-                placeholder="e.g. Prefers concise bullet points, values formal academic titles."
-                value={form.notes}
-                onChange={(event) =>
-                  setForm({ ...form, notes: event.target.value })
-                }
-                className={`${inputClass} min-h-24`}
-              />
-            </div>
+              <div className="sm:col-span-2">
+                <label htmlFor="contact-notes" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  Notes & Communication Preferences
+                </label>
+                <textarea
+                  id="contact-notes"
+                  placeholder="e.g. Prefers concise bullet points, values formal academic titles."
+                  value={form.notes}
+                  onChange={(event) =>
+                    setForm({ ...form, notes: event.target.value })
+                  }
+                  className={`${inputClass} min-h-24`}
+                />
+              </div>
 
-            <div className="flex justify-end gap-3 sm:col-span-2 pt-2">
-              <button
-                type="button"
-                onClick={resetForm}
-                className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={saving}
-                className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
-              >
-                {saving ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" /> Saving…
-                  </>
-                ) : (
-                  <>
-                    <Check className="h-4 w-4" /> {editingId ? "Update contact" : "Save contact"}
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
+              <div className="flex justify-end gap-3 sm:col-span-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50 active:scale-[0.98] cursor-pointer"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Saving…
+                    </>
+                  ) : (
+                    <>
+                      <Check className="h-4 w-4" /> {editingId ? "Update contact" : "Save contact"}
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         )}
 
         {error && (

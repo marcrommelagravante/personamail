@@ -106,6 +106,8 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Implement dual-authentication architecture (cookies + Authorization Bearer header) for zero-friction cross-domain authentication between Vercel and Render
 - [x] Complete cloud service deployment on Render (Backend) and Vercel (Frontend)
 - [x] Fix contacts initial load failure on cross-domain Vercel deployment by replacing raw `fetch` with `fetchWithAuth` (passing Bearer token) and adding "Try again" retry handling to error alert in `frontend/app/contacts/page.tsx`
+- [x] Overhaul Dashboard Skeleton Loader (`DashboardSkeleton`) to eliminate layout jumps and mirror hero, metric strip, quick action cards, recent profiles, and activity list; standardize semantic status colors; convert forms & detail previews across Dashboard, Contacts, Templates, and History into fully accessible modal dialogs (`role="dialog"`, backdrop blur, Escape key dismiss, body scroll lock).
+
 
 
 
