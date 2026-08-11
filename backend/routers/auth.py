@@ -95,7 +95,8 @@ async def google_callback(
 
     jwt_token = create_access_token(str(user.id), str(user.email))
 
-    response = RedirectResponse(f"{settings.FRONTEND_URL}?login=success")
+    frontend_base = settings.FRONTEND_URL.rstrip("/")
+    response = RedirectResponse(f"{frontend_base}/?login=success")
     response.set_cookie(
         key="access_token",
         value=jwt_token,
