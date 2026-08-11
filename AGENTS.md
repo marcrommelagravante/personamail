@@ -110,6 +110,10 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Implement modern Delete Confirmation Modal and auto-dismissing Toast Notification system across Contacts, Templates, and History views, replacing browser native `confirm()` pop-ups with styled, accessible modal dialogs (`role="dialog"`, red warning accent, Escape key dismiss, body scroll lock) and feedback toasts.
 - [x] Overhaul History page into high-density 68px interactive row cards with 6 items/page capacity, type filter pills (All, Compose, Improve, Review), live search bar, and click-to-inspect detail preview modal.
 - [x] Implement Landing Page scroll pop-up animations using IntersectionObserver (`ScrollReveal.tsx`) informed by `ui-ux-pro-max` design intelligence and update Settings sign-out to redirect users directly to the main Landing Page (`/?logout=true`) with a top confirmation toast banner.
+- [x] Fix hard navigation bug on logout by unconditionally rendering `<LandingPage />` in `frontend/app/page.tsx` whenever `logout=true` query param is detected, ensuring instant redirect to Landing Page without stale dashboard state.
+- [x] Clean up Settings page (`frontend/app/settings/page.tsx`) by removing the redundant "Session & Security" sign-out box since `Sign out` is permanently available in `Navbar.tsx`.
+- [x] Make Quick Action cards (Compose, Improve, Review) on Dashboard (`frontend/app/page.tsx`) strictly symmetrical using `flex flex-col justify-between h-full` and baseline-aligned bottom CTA links (`mt-6 pt-2`).
+- [x] Refine History & Activity row cards: remove hidden `opacity-0` Preview text to eliminate right-side whitespace gaps, and upgrade History row delete action button to an explicit `[Trash Icon] Delete` text button (`frontend/app/history/page.tsx`).
 
 
 
