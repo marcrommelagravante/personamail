@@ -105,6 +105,8 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Configure Vercel project with Root Directory `frontend` to natively build Next.js app
 - [x] Implement dual-authentication architecture (cookies + Authorization Bearer header) for zero-friction cross-domain authentication between Vercel and Render
 - [x] Complete cloud service deployment on Render (Backend) and Vercel (Frontend)
+- [x] Fix contacts initial load failure on cross-domain Vercel deployment by replacing raw `fetch` with `fetchWithAuth` (passing Bearer token) and adding "Try again" retry handling to error alert in `frontend/app/contacts/page.tsx`
+
 
 
 

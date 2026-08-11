@@ -50,6 +50,7 @@ export default function ContactsPage() {
 
   const fetchContacts = async () => {
     setLoading(true);
+    setError("");
     try {
       const res = await fetchWithAuth(`${API}/contacts/`);
       if (!res.ok) throw new Error("Could not load contacts");
@@ -64,7 +65,7 @@ export default function ContactsPage() {
   useEffect(() => {
     const loadInitialContacts = async () => {
       try {
-        const res = await fetch(`${API}/contacts/`, { credentials: "include" });
+        const res = await fetchWithAuth(`${API}/contacts/`);
         if (!res.ok) throw new Error("Could not load contacts");
         setContacts(await res.json());
       } catch {
@@ -351,11 +352,20 @@ export default function ContactsPage() {
 
         {error && (
           <div
-            className="mb-6 flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
             role="alert"
           >
-            <AlertCircle className="h-4 w-4 shrink-0" />
-            <p>{error}</p>
+            <div className="flex items-center gap-2.5">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <p>{error}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void fetchContacts()}
+              className="font-semibold text-red-700 underline hover:text-red-900 cursor-pointer shrink-0"
+            >
+              Try again
+            </button>
           </div>
         )}
 
