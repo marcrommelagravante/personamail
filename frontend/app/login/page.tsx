@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { CheckCircle2, Mail } from "lucide-react";
+import { AlertCircle, CheckCircle2, Mail } from "lucide-react";
 import { Suspense, useState } from "react";
 
 import Logo from "../components/Logo";
@@ -10,7 +10,9 @@ import LoginModal from "../components/LoginModal";
 function LoginContent() {
   const searchParams = useSearchParams();
   const loggedOut = searchParams.get("logout") === "true";
+  const authError = searchParams.get("error");
   const [dismissToast, setDismissToast] = useState(false);
+  const [dismissError, setDismissError] = useState(false);
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
@@ -62,6 +64,32 @@ function LoginContent() {
                 type="button"
                 onClick={() => setDismissToast(true)}
                 className="cursor-pointer text-xs font-semibold text-sky-700 hover:text-sky-900"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+
+          {authError && !dismissError && (
+            <div
+              className="animate-slide-down-fade mb-6 flex items-center justify-between gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-medium text-rose-900 shadow-xs"
+              role="alert"
+            >
+              <div className="flex items-center gap-2.5">
+                <AlertCircle
+                  className="h-5 w-5 shrink-0 text-rose-600"
+                  aria-hidden="true"
+                />
+                <span>
+                  {authError === "access_denied"
+                    ? "Sign in was cancelled."
+                    : "Sign in failed. Please try again."}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDismissError(true)}
+                className="cursor-pointer text-xs font-semibold text-rose-700 hover:text-rose-900"
               >
                 Dismiss
               </button>
