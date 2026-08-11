@@ -1,10 +1,8 @@
 <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Stylized P White Outer Shell for High Contrast on Dark & Light Browser Tabs -->
-  <path d="M 32 10 C 18 10 10 18 10 32 L 10 88 C 10 102 18 110 32 110 L 52 110 C 66 110 74 102 74 88 L 74 66 L 82 66 C 102 66 112 52 112 36 C 112 18 100 10 82 10 Z M 44 32 C 44 26 50 22 58 22 L 78 22 C 88 22 94 28 94 36 C 94 44 88 50 78 50 L 58 50 C 50 50 44 44 44 36 Z" fill="#FFFFFF" />
-  <!-- Cyan Envelope Fold in Bottom Loop -->
-  <path d="M 40 76 L 74 106 C 74 106 58 110 40 110 Z" fill="#38BDF8" />
-  <!-- Cyan 3 Dots inside upper Loop -->
-  <circle cx="58" cy="36" r="4.5" fill="#38BDF8" />
-  <circle cx="69" cy="36" r="4.5" fill="#38BDF8" />
-  <circle cx="80" cy="36" r="4.5" fill="#38BDF8" />
+  <!-- Crisp, Bold White P Shell filling the frame for maximum 16px tab legibility -->
+  <path d="M 20 8 C 10 8 4 14 4 24 L 4 96 C 4 106 10 112 20 112 L 48 112 C 58 112 64 106 64 96 L 64 68 L 84 68 C 104 68 116 52 116 38 C 116 18 100 8 80 8 Z M 40 32 C 40 26 46 22 56 22 L 78 22 C 88 22 96 28 96 38 C 96 48 88 54 78 54 L 56 54 C 46 54 40 48 40 38 Z" fill="#FFFFFF" />
+  <!-- Prominent Cyan Envelope Flap -->
+  <path d="M 32 78 L 64 112 L 32 112 Z" fill="#38BDF8" />
+  <!-- Crisp Cyan AI Communication Bar -->
+  <rect x="52" y="34" width="28" height="8" rx="4" fill="#38BDF8" />
 </svg>
