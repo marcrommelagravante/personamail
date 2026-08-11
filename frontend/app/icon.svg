@@ -1,0 +1,10 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Stylized P Dark Navy Outer Shell -->
+  <path d="M 32 10 C 18 10 10 18 10 32 L 10 88 C 10 102 18 110 32 110 L 52 110 C 66 110 74 102 74 88 L 74 66 L 82 66 C 102 66 112 52 112 36 C 112 18 100 10 82 10 Z M 44 32 C 44 26 50 22 58 22 L 78 22 C 88 22 94 28 94 36 C 94 44 88 50 78 50 L 58 50 C 50 50 44 44 44 36 Z" fill="#0F172A" />
+  <!-- Cyan Envelope Fold in Bottom Loop -->
+  <path d="M 40 76 L 74 106 C 74 106 58 110 40 110 Z" fill="#7CE3FF" />
+  <!-- Cyan 3 Dots inside upper Loop -->
+  <circle cx="58" cy="36" r="4.5" fill="#7CE3FF" />
+  <circle cx="69" cy="36" r="4.5" fill="#7CE3FF" />
+  <circle cx="80" cy="36" r="4.5" fill="#7CE3FF" />
+</svg>

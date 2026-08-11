@@ -114,6 +114,7 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Clean up Settings page (`frontend/app/settings/page.tsx`) by removing the redundant "Session & Security" sign-out box since `Sign out` is permanently available in `Navbar.tsx`.
 - [x] Make Quick Action cards (Compose, Improve, Review) on Dashboard (`frontend/app/page.tsx`) strictly symmetrical using `flex flex-col justify-between h-full` and baseline-aligned bottom CTA links (`mt-6 pt-2`).
 - [x] Refine History & Activity row cards: remove hidden `opacity-0` Preview text to eliminate right-side whitespace gaps, and upgrade History row delete action button to an explicit `[Trash Icon] Delete` text button (`frontend/app/history/page.tsx`).
+- [x] Replace default Vercel favicon with official PersonaMail SVG/PNG brand icon in Next.js App Router metadata (`frontend/app/icon.svg`, `frontend/app/favicon.ico`, `frontend/app/layout.tsx`).
 
 
 

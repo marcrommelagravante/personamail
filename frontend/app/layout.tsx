@@ -16,8 +16,12 @@ export const metadata: Metadata = {
   title: "PersonaMail | Relationship-aware communication",
   description: "Compose thoughtful messages for every relationship.",
   icons: {
-    icon: "/icon.png",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/logo-icon-transparent.png", type: "image/png" },
+    ],
     shortcut: "/favicon.ico",
+    apple: "/logo-icon-transparent.png",
   },
 };
 
