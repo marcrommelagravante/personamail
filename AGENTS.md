@@ -103,6 +103,7 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Implement pre-deployment security hardening: anti-CSRF `state` parameter cookie validation in `backend/routers/auth.py` and dedicated `/api/health` endpoint in `backend/main.py`
 - [x] Push latest code changes (`main` branch) to GitHub repository `marcrommelagravante/personamail`
 - [x] Configure Vercel project with Root Directory `frontend` to natively build Next.js app
+- [x] Implement dual-authentication architecture (cookies + Authorization Bearer header) for zero-friction cross-domain authentication between Vercel and Render
 - [x] Complete cloud service deployment on Render (Backend) and Vercel (Frontend)
 
 
