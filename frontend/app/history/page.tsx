@@ -18,6 +18,8 @@ import {
   X,
   AlertTriangle,
   Loader2,
+  Search,
+  ArrowRight,
 } from "lucide-react";
 
 type Activity = {
@@ -31,13 +33,13 @@ type Activity = {
 };
 
 const labels = {
-  compose: { title: "Compose", icon: PenTool, bg: "bg-slate-100 text-slate-700" },
-  improve: { title: "Improve", icon: RefreshCw, bg: "bg-slate-100 text-slate-700" },
-  review: { title: "Review", icon: CheckCircle2, bg: "bg-slate-100 text-slate-700" },
+  compose: { title: "Compose", icon: PenTool },
+  improve: { title: "Improve", icon: RefreshCw },
+  review: { title: "Review", icon: CheckCircle2 },
 };
 
 const API = API_URL;
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 6;
 
 export default function HistoryPage() {
   const [items, setItems] = useState<Activity[]>([]);
@@ -47,11 +49,25 @@ export default function HistoryPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState<Activity | null>(null);
+  const [activeFilter, setActiveFilter] = useState<"all" | "compose" | "improve" | "review">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [deletingHistoryItem, setDeletingHistoryItem] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
 
   useEffect(() => {
-    if (!selectedItem) return;
+    if (!selectedItem && !deletingHistoryItem) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelectedItem(null);
+      if (e.key === "Escape") {
+        setSelectedItem(null);
+        setDeletingHistoryItem(null);
+      }
     };
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
@@ -59,15 +75,13 @@ export default function HistoryPage() {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedItem]);
+  }, [selectedItem, deletingHistoryItem]);
 
   const loadHistory = async () => {
     const response = await fetchWithAuth(`${API}/history/`);
     if (!response.ok) throw new Error("Could not load history");
     const data = await response.json();
     setItems(data);
-    const maxPage = Math.max(1, Math.ceil(data.length / ITEMS_PER_PAGE));
-    if (currentPage > maxPage) setCurrentPage(maxPage);
   };
 
   const handlePageChange = (page: number) => {
@@ -97,28 +111,6 @@ export default function HistoryPage() {
 
     void loadPage();
   }, []);
-
-  const [deletingHistoryItem, setDeletingHistoryItem] = useState<{ id: string; title: string } | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
-
-  const showToast = (message: string) => {
-    setToast(message);
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  useEffect(() => {
-    if (!deletingHistoryItem) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setDeletingHistoryItem(null);
-    };
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [deletingHistoryItem]);
 
   const handleDeleteClick = (item: Activity) => {
     const title = item.subject || item.output_text.slice(0, 40) || "activity entry";
@@ -155,17 +147,36 @@ export default function HistoryPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-  const currentItems = items.slice(
+  // Filter & search logic
+  const filteredItems = items.filter((item) => {
+    const matchesFilter = activeFilter === "all" || item.kind === activeFilter;
+    const query = searchQuery.toLowerCase().trim();
+    const matchesSearch =
+      !query ||
+      (item.subject && item.subject.toLowerCase().includes(query)) ||
+      item.output_text.toLowerCase().includes(query) ||
+      (item.input_text && item.input_text.toLowerCase().includes(query));
+    return matchesFilter && matchesSearch;
+  });
+
+  const counts = {
+    all: items.length,
+    compose: items.filter((i) => i.kind === "compose").length,
+    improve: items.filter((i) => i.kind === "improve").length,
+    review: items.filter((i) => i.kind === "review").length,
+  };
+
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE));
+  const currentItems = filteredItems.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
   );
 
   return (
     <>
       <Navbar />
       <main className="mx-auto w-full flex-1 max-w-4xl px-5 py-8 sm:px-8 sm:py-12">
-        <div className="animate-fade-in-up mb-8">
+        <div className="animate-fade-in-up mb-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
             <Clock className="h-3.5 w-3.5 text-slate-700" /> Recent activity
           </span>
@@ -173,12 +184,12 @@ export default function HistoryPage() {
             History
           </h1>
           <p className="mt-1.5 text-slate-600">
-            Review and copy previously composed, improved, or reviewed messages.
+            Click any message row to view full details, copy output, or delete records.
           </p>
         </div>
 
         {!isAuthenticated ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-xs">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500">
               <Clock className="h-6 w-6" />
             </div>
@@ -199,14 +210,83 @@ export default function HistoryPage() {
               </div>
             )}
 
+            {/* Filter Tabs & Search Header */}
+            {!loading && items.length > 0 && (
+              <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-white p-1 shadow-xs">
+                  {(["all", "compose", "improve", "review"] as const).map((type) => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => {
+                        setActiveFilter(type);
+                        setCurrentPage(1);
+                      }}
+                      className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer capitalize ${
+                        activeFilter === type
+                          ? "bg-primary text-white shadow-xs"
+                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      }`}
+                    >
+                      <span>{type}</span>
+                      <span
+                        className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                          activeFilter === type
+                            ? "bg-slate-800 text-sky-200"
+                            : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
+                        {counts[type]}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    placeholder="Search history..."
+                    className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-3 text-xs text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 shadow-xs"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
             {loading ? (
-              <div className="space-y-4" aria-label="Loading history">
-                <div className="h-32 animate-pulse rounded-2xl bg-slate-200" />
-                <div className="h-32 animate-pulse rounded-2xl bg-slate-200" />
-                <div className="h-32 animate-pulse rounded-2xl bg-slate-200" />
+              <div className="space-y-3" aria-label="Loading history">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div
+                    key={i}
+                    className="flex h-16 items-center justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-xs"
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div className="h-10 w-10 animate-pulse rounded-xl bg-slate-200" />
+                      <div className="space-y-1.5">
+                        <div className="h-3.5 w-24 animate-pulse rounded-md bg-slate-200" />
+                        <div className="h-4 w-48 animate-pulse rounded-md bg-slate-200 sm:w-64" />
+                      </div>
+                    </div>
+                    <div className="h-7 w-20 animate-pulse rounded-xl bg-slate-200" />
+                  </div>
+                ))}
               </div>
             ) : items.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-xs">
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500">
                   <Clock className="h-6 w-6" />
                 </div>
@@ -215,9 +295,25 @@ export default function HistoryPage() {
                   Your composed, improved, and reviewed messages will automatically be recorded here.
                 </p>
               </div>
+            ) : filteredItems.length === 0 ? (
+              <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs">
+                <p className="text-sm font-medium text-slate-700">
+                  No records matching &quot;{searchQuery}&quot; in {activeFilter} category.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setActiveFilter("all");
+                  }}
+                  className="mt-3 text-xs font-semibold text-sky-700 hover:underline cursor-pointer"
+                >
+                  Clear filters
+                </button>
+              </div>
             ) : (
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-4">
+              <div className="space-y-3">
+                <div className="space-y-2.5">
                   {currentItems.map((item) => {
                     const meta = labels[item.kind] || labels.compose;
                     const Icon = meta.icon;
@@ -225,70 +321,78 @@ export default function HistoryPage() {
                     return (
                       <article
                         key={item.id}
-                        className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-300"
+                        onClick={() => setSelectedItem(item)}
+                        className="group flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md active:scale-[0.99]"
                       >
-                        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-                          <div className="flex items-start gap-3">
-                            <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${meta.bg}`}>
-                              <Icon className="h-4 w-4" />
+                        <div className="flex items-center gap-3.5 min-w-0">
+                          <span
+                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-bold transition-transform group-hover:scale-105 ${
+                              item.kind === "compose"
+                                ? "bg-sky-100 text-sky-900"
+                                : item.kind === "improve"
+                                ? "bg-emerald-100 text-emerald-900"
+                                : "bg-indigo-100 text-indigo-900"
+                            }`}
+                          >
+                            <Icon className="h-5 w-5" />
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-700">
+                                {meta.title}
+                              </span>
+                              <span className="text-xs text-slate-400">·</span>
+                              <span className="text-xs text-slate-500">
+                                {new Date(item.created_at).toLocaleDateString(undefined, {
+                                  month: "short",
+                                  day: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </span>
                             </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                                  {meta.title}
-                                </span>
-                                <span className="text-xs text-slate-400">·</span>
-                                <span className="text-xs text-slate-500">
-                                  {new Date(item.created_at).toLocaleDateString(undefined, {
-                                    month: "short",
-                                    day: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })}
-                                </span>
-                              </div>
-                              <h2 className="mt-1 font-semibold text-slate-900">
-                                {item.subject || "Reviewed Text"}
-                              </h2>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-2 self-end sm:self-center">
-                            <button
-                              type="button"
-                              onClick={() => copyOutput(item)}
-                              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
-                            >
-                              {copiedId === item.id ? (
-                                <>
-                                  <Check className="h-3.5 w-3.5 text-emerald-600" />
-                                  <span className="text-emerald-600 font-semibold">Copied</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy className="h-3.5 w-3.5" /> Copy output
-                                </>
-                              )}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteClick(item)}
-                              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600 cursor-pointer"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" /> Delete
-                            </button>
+                            <h2 className="mt-0.5 truncate font-semibold text-slate-900 group-hover:text-primary">
+                              {item.subject || item.output_text.slice(0, 60) || "Untitled draft"}
+                            </h2>
                           </div>
                         </div>
 
-                        <div className="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">
-                          {item.output_text}
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              copyOutput(item);
+                            }}
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50 cursor-pointer"
+                            title="Copy message output"
+                          >
+                            {copiedId === item.id ? (
+                              <>
+                                <Check className="h-3.5 w-3.5 text-emerald-600" />
+                                <span className="text-emerald-600 font-semibold">Copied</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="h-3.5 w-3.5" /> Copy
+                              </>
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteClick(item);
+                            }}
+                            className="inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-slate-500 transition hover:bg-red-50 hover:text-red-600 cursor-pointer"
+                            title="Delete entry"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                          <span className="hidden sm:inline-flex items-center gap-0.5 text-xs font-semibold text-sky-700 opacity-0 transition-opacity group-hover:opacity-100">
+                            Preview <ArrowRight className="h-3 w-3" />
+                          </span>
                         </div>
-
-                        {item.summary && (
-                          <p className="mt-3 text-xs text-slate-500 italic">
-                            <span className="font-medium text-slate-700 not-italic">Summary:</span> {item.summary}
-                          </p>
-                        )}
                       </article>
                     );
                   })}
@@ -298,15 +402,15 @@ export default function HistoryPage() {
                   <div className="mt-4 flex flex-col items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:flex-row">
                     <p className="text-xs font-medium text-slate-500">
                       Showing <span className="font-semibold text-slate-800">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{" "}
-                      <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, items.length)}</span> of{" "}
-                      <span className="font-semibold text-slate-800">{items.length}</span> activity logs
+                      <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredItems.length)}</span> of{" "}
+                      <span className="font-semibold text-slate-800">{filteredItems.length}</span> activity logs
                     </p>
                     <div className="flex items-center gap-1.5">
                       <button
                         type="button"
                         disabled={currentPage === 1}
                         onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95"
+                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95 cursor-pointer"
                       >
                         <ChevronLeft className="h-4 w-4" /> Previous
                       </button>
@@ -316,7 +420,7 @@ export default function HistoryPage() {
                             key={page}
                             type="button"
                             onClick={() => handlePageChange(page)}
-                            className={`h-8 w-8 rounded-lg text-xs font-semibold transition ${
+                            className={`h-8 w-8 rounded-lg text-xs font-semibold transition cursor-pointer ${
                               currentPage === page
                                 ? "bg-primary text-white"
                                 : "text-slate-600 hover:bg-slate-100"
@@ -330,7 +434,7 @@ export default function HistoryPage() {
                         type="button"
                         disabled={currentPage === totalPages}
                         onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95"
+                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95 cursor-pointer"
                       >
                         Next <ChevronRight className="h-4 w-4" />
                       </button>

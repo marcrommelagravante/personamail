@@ -108,6 +108,8 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Fix contacts initial load failure on cross-domain Vercel deployment by replacing raw `fetch` with `fetchWithAuth` (passing Bearer token) and adding "Try again" retry handling to error alert in `frontend/app/contacts/page.tsx`
 - [x] Overhaul Dashboard Skeleton Loader (`DashboardSkeleton`) to eliminate layout jumps and mirror hero, metric strip, quick action cards, recent profiles, and activity list; standardize semantic status colors; convert forms & detail previews across Dashboard, Contacts, Templates, and History into fully accessible modal dialogs (`role="dialog"`, backdrop blur, Escape key dismiss, body scroll lock).
 - [x] Implement modern Delete Confirmation Modal and auto-dismissing Toast Notification system across Contacts, Templates, and History views, replacing browser native `confirm()` pop-ups with styled, accessible modal dialogs (`role="dialog"`, red warning accent, Escape key dismiss, body scroll lock) and feedback toasts.
+- [x] Overhaul History page into high-density 68px interactive row cards with 6 items/page capacity, type filter pills (All, Compose, Improve, Review), live search bar, and click-to-inspect detail preview modal.
+
 
 
 
