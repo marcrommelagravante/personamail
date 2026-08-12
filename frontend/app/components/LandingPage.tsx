@@ -11,7 +11,7 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Logo from "./Logo";
 import ScrollReveal from "./ScrollReveal";
 import LoginModal from "./LoginModal";
@@ -66,6 +66,7 @@ function LandingPageContent() {
   const searchParams = useSearchParams();
   const loggedOut = searchParams.get("logout") === "true";
   const [dismissToast, setDismissToast] = useState(false);
+  const [isToastFading, setIsToastFading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const [activeProfile, setActiveProfile] = useState<SampleProfile>(
@@ -75,16 +76,33 @@ function LandingPageContent() {
     "compose",
   );
 
+  useEffect(() => {
+    if (loggedOut && !dismissToast) {
+      const timer = setTimeout(() => {
+        setIsToastFading(true);
+        const hideTimer = setTimeout(() => {
+          setDismissToast(true);
+        }, 300);
+        return () => clearTimeout(hideTimer);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [loggedOut, dismissToast]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-primary antialiased dark:bg-[#0b0f19] dark:text-slate-100 transition-colors duration-200">
-      {/* Signed Out Confirmation Toast */}
+    <div className="min-h-screen bg-slate-50 font-sans text-primary antialiased transition-colors duration-200 dark:bg-[#0b0f19] dark:text-slate-100">
+      {/* Signed Out Confirmation Toast with auto-fade */}
       {loggedOut && !dismissToast && (
         <div
-          className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex w-[90%] max-w-md items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-white/95 px-4 py-3 text-sm font-medium text-sky-900 shadow-xl backdrop-blur-md dark:border-sky-800 dark:bg-slate-900/95 dark:text-sky-200 animate-slide-down-fade"
+          className={`fixed top-5 left-1/2 z-[100] flex w-[90%] max-w-md -translate-x-1/2 items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-white/95 px-4 py-3 text-sm font-medium text-sky-900 shadow-xl backdrop-blur-md transition-all duration-300 dark:border-sky-800 dark:bg-slate-900/95 dark:text-sky-200 ${
+            isToastFading
+              ? "pointer-events-none -translate-y-4 opacity-0"
+              : "animate-slide-down-fade translate-y-0 opacity-100"
+          }`}
           role="status"
         >
           <div className="flex items-center gap-2.5">
@@ -97,7 +115,7 @@ function LandingPageContent() {
           <button
             type="button"
             onClick={() => setDismissToast(true)}
-            className="cursor-pointer rounded-lg px-2.5 py-1 text-xs font-semibold text-sky-700 transition hover:bg-sky-50 hover:text-sky-900 dark:text-sky-300 dark:hover:bg-sky-950/60 dark:hover:text-sky-100"
+            className="cursor-pointer rounded-lg px-2.5 py-1 text-xs font-semibold text-sky-700 transition-all duration-150 hover:-translate-y-0.5 hover:bg-sky-50 hover:text-sky-900 active:scale-95 dark:text-sky-300 dark:hover:bg-sky-950/60 dark:hover:text-sky-100"
           >
             Dismiss
           </button>
@@ -112,19 +130,19 @@ function LandingPageContent() {
           <nav className="hidden items-center gap-8 md:flex">
             <a
               href="#features"
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-white"
+              className="text-sm font-medium text-slate-600 transition-all duration-150 hover:-translate-y-0.5 hover:text-primary dark:text-slate-300 dark:hover:text-white"
             >
               Features
             </a>
             <a
               href="#how-it-works"
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-white"
+              className="text-sm font-medium text-slate-600 transition-all duration-150 hover:-translate-y-0.5 hover:text-primary dark:text-slate-300 dark:hover:text-white"
             >
               How It Works
             </a>
             <a
               href="#value-prop"
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-white"
+              className="text-sm font-medium text-slate-600 transition-all duration-150 hover:-translate-y-0.5 hover:text-primary dark:text-slate-300 dark:hover:text-white"
             >
               Why PersonaMail
             </a>
@@ -135,20 +153,21 @@ function LandingPageContent() {
             <button
               type="button"
               onClick={() => setShowLoginModal(true)}
-              className="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-primary dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white"
+              className="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-100 hover:text-primary active:scale-95 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white"
             >
               Sign in
             </button>
             <button
               type="button"
               onClick={() => setShowLoginModal(true)}
-              className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-sm dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400"
+              className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md active:scale-95 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400"
             >
               Get Started
             </button>
           </div>
         </div>
       </header>
+
 
       {/* 2. Hero Section (Combined with Prominent Product Preview) */}
       <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24">
@@ -178,17 +197,17 @@ function LandingPageContent() {
               <button
                 type="button"
                 onClick={() => setShowLoginModal(true)}
-                className="group inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400 sm:w-auto"
+                className="group inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-lg active:scale-95 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400 sm:w-auto"
               >
                 Get Started
                 <ArrowRight
-                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
                   aria-hidden="true"
                 />
               </button>
               <a
                 href="#how-it-works"
-                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50 hover:text-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 sm:w-auto"
+                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-primary hover:shadow-sm active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 sm:w-auto"
               >
                 See how it works
               </a>
@@ -209,7 +228,7 @@ function LandingPageContent() {
                       key={profile.id}
                       type="button"
                       onClick={() => setActiveProfile(profile)}
-                      className={`inline-flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-all ${
+                      className={`inline-flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-all duration-150 hover:-translate-y-0.5 active:scale-95 ${
                         activeProfile.id === profile.id
                           ? "bg-primary text-white shadow-xs dark:bg-sky-500 dark:text-slate-950"
                           : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
@@ -228,7 +247,7 @@ function LandingPageContent() {
                       key={tab}
                       type="button"
                       onClick={() => setActiveTab(tab)}
-                      className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition-all ${
+                      className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition-all duration-150 hover:-translate-y-0.5 active:scale-95 ${
                         activeTab === tab
                           ? "bg-white text-primary shadow-xs dark:bg-slate-900 dark:text-white"
                           : "text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-white"
@@ -568,10 +587,10 @@ function LandingPageContent() {
               <button
                 type="button"
                 onClick={() => setShowLoginModal(true)}
-                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent px-8 py-4 text-base font-semibold text-primary transition-all hover:-translate-y-0.5 hover:bg-sky-200 hover:shadow-lg dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300"
+                className="group inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent px-8 py-4 text-base font-semibold text-primary transition-all duration-200 hover:-translate-y-1 hover:bg-sky-200 hover:shadow-xl active:scale-95 dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300"
               >
                 Get Started
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
               </button>
             </div>
           </ScrollReveal>
@@ -600,7 +619,7 @@ function LandingPageContent() {
                       <button
                         type="button"
                         onClick={() => setShowLoginModal(true)}
-                        className="cursor-pointer hover:text-white"
+                        className="cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:text-white"
                       >
                         Compose
                       </button>
@@ -609,7 +628,7 @@ function LandingPageContent() {
                       <button
                         type="button"
                         onClick={() => setShowLoginModal(true)}
-                        className="cursor-pointer hover:text-white"
+                        className="cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:text-white"
                       >
                         Contacts
                       </button>
@@ -618,7 +637,7 @@ function LandingPageContent() {
                       <button
                         type="button"
                         onClick={() => setShowLoginModal(true)}
-                        className="cursor-pointer hover:text-white"
+                        className="cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:text-white"
                       >
                         Improve
                       </button>
@@ -627,7 +646,7 @@ function LandingPageContent() {
                       <button
                         type="button"
                         onClick={() => setShowLoginModal(true)}
-                        className="cursor-pointer hover:text-white"
+                        className="cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:text-white"
                       >
                         Review
                       </button>
@@ -641,12 +660,12 @@ function LandingPageContent() {
                   </p>
                   <ul className="mt-3 space-y-2">
                     <li>
-                      <a href="#value-prop" className="hover:text-white">
+                      <a href="#value-prop" className="inline-block transition-all duration-150 hover:-translate-y-0.5 hover:text-white">
                         About
                       </a>
                     </li>
                     <li>
-                      <a href="#how-it-works" className="hover:text-white">
+                      <a href="#how-it-works" className="inline-block transition-all duration-150 hover:-translate-y-0.5 hover:text-white">
                         Workflow
                       </a>
                     </li>
@@ -659,12 +678,12 @@ function LandingPageContent() {
                   </p>
                   <ul className="mt-3 space-y-2">
                     <li>
-                      <span className="cursor-pointer hover:text-white">
+                      <span className="inline-block cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:text-white">
                         Privacy
                       </span>
                     </li>
                     <li>
-                      <span className="cursor-pointer hover:text-white">
+                      <span className="inline-block cursor-pointer transition-all duration-150 hover:-translate-y-0.5 hover:text-white">
                         Terms
                       </span>
                     </li>

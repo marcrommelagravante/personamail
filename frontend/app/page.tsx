@@ -401,7 +401,7 @@ function HomeContent() {
                 </p>
                 <Link
                   href="/generate"
-                  className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                  className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-primary transition-all duration-150 hover:-translate-y-0.5 hover:bg-slate-200 active:scale-95 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                 >
                   Start now
                 </Link>
@@ -412,7 +412,7 @@ function HomeContent() {
                   <div
                     key={item.id}
                     onClick={() => setPreviewItem(item)}
-                    className="group flex cursor-pointer flex-col gap-2 p-4 transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/80 sm:flex-row sm:items-center sm:justify-between"
+                    className="group flex cursor-pointer flex-col gap-2 p-4 transition-all duration-150 hover:-translate-y-0.5 hover:bg-slate-50/80 dark:hover:bg-slate-800/80 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="flex items-center gap-3">
                       <span className="shrink-0 rounded-md bg-sky-100 px-2.5 py-1 text-xs font-semibold text-primary dark:bg-sky-950/70 dark:text-sky-300">
@@ -447,13 +447,13 @@ function HomeContent() {
             <div className="flex gap-2">
               <Link
                 href="/contacts"
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-primary transition-all hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 active:scale-95"
+                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-primary transition-all duration-150 hover:-translate-y-0.5 hover:bg-slate-50 active:scale-95 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 Contacts
               </Link>
               <Link
                 href="/templates"
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-primary transition-all hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 active:scale-95"
+                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-primary transition-all duration-150 hover:-translate-y-0.5 hover:bg-slate-50 active:scale-95 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 Templates
               </Link>

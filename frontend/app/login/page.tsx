@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { AlertCircle, CheckCircle2, Mail } from "lucide-react";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import Logo from "../components/Logo";
 import LoginModal from "../components/LoginModal";
@@ -12,7 +12,21 @@ function LoginContent() {
   const loggedOut = searchParams.get("logout") === "true";
   const authError = searchParams.get("error");
   const [dismissToast, setDismissToast] = useState(false);
+  const [isToastFading, setIsToastFading] = useState(false);
   const [dismissError, setDismissError] = useState(false);
+
+  useEffect(() => {
+    if (loggedOut && !dismissToast) {
+      const timer = setTimeout(() => {
+        setIsToastFading(true);
+        const hideTimer = setTimeout(() => {
+          setDismissToast(true);
+        }, 300);
+        return () => clearTimeout(hideTimer);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [loggedOut, dismissToast]);
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
@@ -50,7 +64,11 @@ function LoginContent() {
         <div className="mx-auto w-full max-w-md">
           {loggedOut && !dismissToast && (
             <div
-              className="animate-slide-down-fade mb-6 flex items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm font-medium text-sky-900 shadow-xs dark:border-sky-900/60 dark:bg-sky-950/50 dark:text-sky-200"
+              className={`mb-6 flex items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm font-medium text-sky-900 shadow-xs transition-all duration-300 dark:border-sky-900/60 dark:bg-sky-950/50 dark:text-sky-200 ${
+                isToastFading
+                  ? "pointer-events-none -translate-y-4 opacity-0"
+                  : "animate-slide-down-fade translate-y-0 opacity-100"
+              }`}
               role="status"
             >
               <div className="flex items-center gap-2.5">
@@ -63,7 +81,7 @@ function LoginContent() {
               <button
                 type="button"
                 onClick={() => setDismissToast(true)}
-                className="cursor-pointer text-xs font-semibold text-sky-700 hover:text-sky-900 dark:text-sky-400 dark:hover:text-sky-200"
+                className="cursor-pointer rounded-lg px-2.5 py-1 text-xs font-semibold text-sky-700 transition-all duration-150 hover:-translate-y-0.5 hover:bg-sky-100 hover:text-sky-900 active:scale-95 dark:text-sky-300 dark:hover:bg-sky-900/60 dark:hover:text-sky-100"
               >
                 Dismiss
               </button>

@@ -87,7 +87,7 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={[
-                    "rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500",
+                    "rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150 hover:-translate-y-0.5 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500",
                     isActive(item.href)
                       ? "bg-sky-100 text-primary dark:bg-sky-950/70 dark:text-sky-300"
                       : "text-slate-600 hover:bg-slate-100 hover:text-primary dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white",
@@ -105,7 +105,7 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                 href="/settings"
                 aria-label="Settings"
                 className={[
-                  "rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-primary dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500",
+                  "rounded-lg p-2 text-slate-600 transition-all duration-150 hover:-translate-y-0.5 hover:bg-slate-100 hover:text-primary active:scale-95 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500",
                   isActive("/settings")
                     ? "bg-sky-100 text-primary dark:bg-sky-950/70 dark:text-sky-300"
                     : "",
@@ -118,7 +118,7 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                 type="button"
                 onClick={() => setShowLogoutModal(true)}
                 title="Sign out of PersonaMail"
-                className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 transition-all hover:border-slate-300 hover:bg-slate-100 hover:text-red-600 dark:border-slate-800 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-red-400 active:scale-95"
+                className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-rose-50 hover:text-rose-600 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:bg-rose-950/50 dark:hover:text-rose-400"
               >
                 <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Sign out</span>
@@ -126,7 +126,7 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
 
               <Link
                 href="/generate"
-                className="rounded-lg bg-primary px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+                className="rounded-lg bg-primary px-3.5 py-2 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md active:scale-95 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
               >
                 New message
               </Link>
