@@ -119,7 +119,7 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Fix PersonaMail logo click behavior: configured smooth `window.scrollTo({ top: 0, behavior: "smooth" })` when already on the landing page (`/` or `/landing`), avoiding hard page reloads.
 - [x] Implement Light Mode & Dark Mode toggle system across Landing Page and Dashboard workspace: created `ThemeProvider` context and theme toggle control in `Navbar` and `Footer`, persisted theme in `localStorage` with `prefers-color-scheme` fallback, added dark mode Tailwind CSS utility classes across all sub-pages (Contacts, Generate, Rewrite, Review, History, Templates, Settings, Login, Landing), and verified zero-error `npm run lint` & `npm run build`.
 - [x] Fix dark mode contrast & logo visibility: replaced base64 PNG logo with vector SVG icon (`Logo.tsx`) and added `dark:bg-slate-900/90 dark:border-slate-800 dark:text-white` to empty state cards, skeletons, and modal dialogs across Dashboard, Contacts, Templates, and History pages.
-- [x] Fix logo visibility & alignment: normalized both Light and Dark mode logo icons into identical 1:1 square `512x512` transparent canvases in `Logo.tsx`, eliminating layout shifts and size discrepancies when toggling themes.
+- [x] Implement Sign Out Toast Auto-Fade & Universal Button Hover Animations: added 4-second auto-dismiss with smooth 300ms fade-out transition to the sign-out notification toast in `LandingPage.tsx` and `login/page.tsx`, and added micro-interaction hover animations (`hover:-translate-y-0.5`, `hover:shadow-md`, `active:scale-95`) to all buttons across the Dashboard, Landing Page, Navigation bar, and Footer.
 
 
 
