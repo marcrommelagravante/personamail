@@ -271,32 +271,32 @@ export default function HistoryPage() {
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div
                     key={i}
-                    className="flex h-16 items-center justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-xs"
+                    className="flex h-16 items-center justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900/90"
                   >
                     <div className="flex items-center gap-3.5">
-                      <div className="h-10 w-10 animate-pulse rounded-xl bg-slate-200" />
+                      <div className="h-10 w-10 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" />
                       <div className="space-y-1.5">
-                        <div className="h-3.5 w-24 animate-pulse rounded-md bg-slate-200" />
-                        <div className="h-4 w-48 animate-pulse rounded-md bg-slate-200 sm:w-64" />
+                        <div className="h-3.5 w-24 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
+                        <div className="h-4 w-48 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800 sm:w-64" />
                       </div>
                     </div>
-                    <div className="h-7 w-20 animate-pulse rounded-xl bg-slate-200" />
+                    <div className="h-7 w-20 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" />
                   </div>
                 ))}
               </div>
             ) : items.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-xs">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-xs dark:border-slate-800 dark:bg-slate-900/90">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                   <Clock className="h-6 w-6" />
                 </div>
-                <h2 className="mt-4 font-semibold text-slate-900">No activity logged yet</h2>
-                <p className="mx-auto mt-1.5 max-w-sm text-sm text-slate-600">
+                <h2 className="mt-4 font-semibold text-slate-900 dark:text-white">No activity logged yet</h2>
+                <p className="mx-auto mt-1.5 max-w-sm text-sm text-slate-600 dark:text-slate-300">
                   Your composed, improved, and reviewed messages will automatically be recorded here.
                 </p>
               </div>
             ) : filteredItems.length === 0 ? (
-              <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs">
-                <p className="text-sm font-medium text-slate-700">
+              <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs dark:border-slate-800 dark:bg-slate-900/90">
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                   No records matching &quot;{searchQuery}&quot; in {activeFilter} category.
                 </p>
                 <button
@@ -305,7 +305,7 @@ export default function HistoryPage() {
                     setSearchQuery("");
                     setActiveFilter("all");
                   }}
-                  className="mt-3 text-xs font-semibold text-sky-700 hover:underline cursor-pointer"
+                  className="mt-3 text-xs font-semibold text-sky-700 hover:underline dark:text-sky-400 cursor-pointer"
                 >
                   Clear filters
                 </button>
@@ -395,18 +395,18 @@ export default function HistoryPage() {
                 </div>
 
                 {totalPages > 1 && (
-                  <div className="mt-4 flex flex-col items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:flex-row">
-                    <p className="text-xs font-medium text-slate-500">
-                      Showing <span className="font-semibold text-slate-800">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{" "}
-                      <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredItems.length)}</span> of{" "}
-                      <span className="font-semibold text-slate-800">{filteredItems.length}</span> activity logs
+                  <div className="mt-4 flex flex-col items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900/90 sm:flex-row">
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                      Showing <span className="font-semibold text-slate-800 dark:text-white">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{" "}
+                      <span className="font-semibold text-slate-800 dark:text-white">{Math.min(currentPage * ITEMS_PER_PAGE, filteredItems.length)}</span> of{" "}
+                      <span className="font-semibold text-slate-800 dark:text-white">{filteredItems.length}</span> activity logs
                     </p>
                     <div className="flex items-center gap-1.5">
                       <button
                         type="button"
                         disabled={currentPage === 1}
                         onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95 cursor-pointer"
+                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95 cursor-pointer"
                       >
                         <ChevronLeft className="h-4 w-4" /> Previous
                       </button>
@@ -418,8 +418,8 @@ export default function HistoryPage() {
                             onClick={() => handlePageChange(page)}
                             className={`h-8 w-8 rounded-lg text-xs font-semibold transition cursor-pointer ${
                               currentPage === page
-                                ? "bg-primary text-white"
-                                : "text-slate-600 hover:bg-slate-100"
+                                ? "bg-primary text-white dark:bg-sky-500 dark:text-slate-950"
+                                : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
                             }`}
                           >
                             {page}
@@ -430,7 +430,7 @@ export default function HistoryPage() {
                         type="button"
                         disabled={currentPage === totalPages}
                         onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95 cursor-pointer"
+                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95 cursor-pointer"
                       >
                         Next <ChevronRight className="h-4 w-4" />
                       </button>
@@ -526,11 +526,11 @@ export default function HistoryPage() {
               )}
             </div>
 
-            <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+            <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
               <button
                 type="button"
                 onClick={() => handleDeleteClick(selectedItem)}
-                className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-red-600 transition hover:bg-red-50 cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40 cursor-pointer"
               >
                 <Trash2 className="h-3.5 w-3.5" /> Delete entry
               </button>
@@ -539,18 +539,18 @@ export default function HistoryPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedItem(null)}
-                  className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+                  className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 transition cursor-pointer"
                 >
                   Close
                 </button>
                 <button
                   type="button"
                   onClick={() => copyOutput(selectedItem)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98] cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400 active:scale-[0.98] cursor-pointer"
                 >
                   {copiedId === selectedItem.id ? (
                     <>
-                      <Check className="h-3.5 w-3.5 text-emerald-400" /> Copied!
+                      <Check className="h-3.5 w-3.5 text-emerald-400 dark:text-emerald-950" /> Copied!
                     </>
                   ) : (
                     <>
@@ -574,29 +574,29 @@ export default function HistoryPage() {
           onClick={() => setDeletingHistoryItem(null)}
         >
           <div
-            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-scale-in space-y-4"
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-scale-in space-y-4 dark:border-slate-800 dark:bg-slate-900"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400">
                 <AlertTriangle className="h-6 w-6" />
               </div>
               <div className="space-y-1">
-                <h3 id="delete-history-modal-title" className="text-base font-semibold text-slate-900">
+                <h3 id="delete-history-modal-title" className="text-base font-semibold text-slate-900 dark:text-white">
                   Delete Activity Record?
                 </h3>
-                <p className="text-xs leading-relaxed text-slate-600">
-                  Are you sure you want to delete <span className="font-semibold text-slate-900">&quot;{deletingHistoryItem.title}&quot;</span>? This entry will be permanently removed from your history.
+                <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                  Are you sure you want to delete <span className="font-semibold text-slate-900 dark:text-white">&quot;{deletingHistoryItem.title}&quot;</span>? This entry will be permanently removed from your history.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
               <button
                 type="button"
                 disabled={isDeleting}
                 onClick={() => setDeletingHistoryItem(null)}
-                className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+                className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
               >
                 Cancel
               </button>
