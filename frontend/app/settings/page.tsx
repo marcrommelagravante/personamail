@@ -75,51 +75,51 @@ export default function SettingsPage() {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10";
+    "w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-sky-400 dark:focus:ring-sky-400/20";
 
   return (
     <>
       <Navbar />
       <main className="mx-auto w-full flex-1 max-w-2xl px-5 py-8 sm:px-8 sm:py-12">
         <div className="animate-fade-in-up mb-8">
-          <p className="text-sm font-semibold text-sky-700">
+          <p className="text-sm font-semibold text-sky-700 dark:text-sky-400">
             Your communication style
           </p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
             Settings
           </h1>
-          <p className="mt-2 text-slate-600">
+          <p className="mt-2 text-slate-600 dark:text-slate-300">
             Set the defaults PersonaMail should start with for new communication
             profiles.
           </p>
         </div>
         {!isAuthenticated ? (
-          <div className="animate-scale-in rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs">
-            <h2 className="font-semibold text-primary text-lg">Sign in to manage settings</h2>
-            <p className="mt-2 text-sm text-slate-600">
+          <div className="animate-scale-in rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs dark:border-slate-800 dark:bg-slate-900">
+            <h2 className="font-semibold text-primary dark:text-white text-lg">Sign in to manage settings</h2>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
               Your communication defaults stay private to your account.
             </p>
             <button
               type="button"
               onClick={() => setShowLoginModal(true)}
-              className="mt-5 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-slate-800"
+              className="mt-5 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-slate-800 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400"
             >
               Sign in with Google
             </button>
           </div>
         ) : loading ? (
-          <p className="text-sm text-slate-500">Loading settings…</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Loading settings…</p>
         ) : (
           <div className="space-y-6">
             <form
               onSubmit={handleSubmit}
-              className="animate-fade-in-up animate-stagger-1 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6"
+              className="animate-fade-in-up animate-stagger-1 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900 sm:p-6"
             >
               <div className="space-y-5">
                 <div>
                   <label
                     htmlFor="tone"
-                    className="mb-1.5 block text-sm font-semibold text-slate-700"
+                    className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"
                   >
                     Default tone
                   </label>
@@ -142,7 +142,7 @@ export default function SettingsPage() {
                 <div>
                   <label
                     htmlFor="greeting"
-                    className="mb-1.5 block text-sm font-semibold text-slate-700"
+                    className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"
                   >
                     Default greeting
                   </label>
@@ -162,7 +162,7 @@ export default function SettingsPage() {
                 <div>
                   <label
                     htmlFor="closing"
-                    className="mb-1.5 block text-sm font-semibold text-slate-700"
+                    className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"
                   >
                     Default closing
                   </label>
@@ -182,7 +182,7 @@ export default function SettingsPage() {
               </div>
               {error && (
                 <p
-                  className="animate-slide-down-fade mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                  className="animate-slide-down-fade mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300"
                   role="alert"
                 >
                   {error}
@@ -190,7 +190,7 @@ export default function SettingsPage() {
               )}
               {success && (
                 <p
-                  className="animate-slide-down-fade mt-5 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800"
+                  className="animate-slide-down-fade mt-5 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800 dark:border-sky-900/60 dark:bg-sky-950/50 dark:text-sky-300"
                   role="status"
                 >
                   {success}
@@ -199,7 +199,7 @@ export default function SettingsPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="mt-6 inline-flex w-full cursor-pointer items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md disabled:opacity-50"
+                className="mt-6 inline-flex w-full cursor-pointer items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400 disabled:opacity-50"
               >
                 {saving ? "Saving defaults…" : "Save defaults"}
               </button>

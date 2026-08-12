@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import Logo from "./Logo";
 import LogoutModal from "./LogoutModal";
+import ThemeToggle from "./ThemeToggle";
 import { API_URL, fetchWithAuth } from "../lib/api";
 
 const navigation = [
@@ -71,7 +72,7 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
         <nav
           className="mx-auto max-w-7xl px-5 sm:px-8"
           aria-label="Main navigation"
@@ -88,8 +89,8 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                   className={[
                     "rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500",
                     isActive(item.href)
-                      ? "bg-sky-100 text-primary"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-primary",
+                      ? "bg-sky-100 text-primary dark:bg-sky-950/70 dark:text-sky-300"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-primary dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white",
                   ].join(" ")}
                 >
                   {item.label}
@@ -98,12 +99,16 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
             </div>
 
             <div className="hidden items-center gap-2 md:flex">
+              <ThemeToggle size="sm" />
+
               <Link
                 href="/settings"
                 aria-label="Settings"
                 className={[
-                  "rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500",
-                  isActive("/settings") ? "bg-sky-100 text-primary" : "",
+                  "rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-primary dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500",
+                  isActive("/settings")
+                    ? "bg-sky-100 text-primary dark:bg-sky-950/70 dark:text-sky-300"
+                    : "",
                 ].join(" ")}
               >
                 <Settings className="h-4 w-4" aria-hidden="true" />
@@ -113,7 +118,7 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                 type="button"
                 onClick={() => setShowLogoutModal(true)}
                 title="Sign out of PersonaMail"
-                className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 transition-all hover:border-slate-300 hover:bg-slate-100 hover:text-red-600 active:scale-95"
+                className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 transition-all hover:border-slate-300 hover:bg-slate-100 hover:text-red-600 dark:border-slate-800 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-red-400 active:scale-95"
               >
                 <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Sign out</span>
@@ -121,29 +126,32 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
 
               <Link
                 href="/generate"
-                className="rounded-lg bg-primary px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+                className="rounded-lg bg-primary px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
               >
                 New message
               </Link>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-expanded={isOpen}
-              aria-label={isOpen ? "Close navigation" : "Open navigation"}
-              className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 md:hidden"
-            >
-              {isOpen ? (
-                <X className="h-5 w-5" aria-hidden="true" />
-              ) : (
-                <Menu className="h-5 w-5" aria-hidden="true" />
-              )}
-            </button>
+            <div className="flex items-center gap-2 md:hidden">
+              <ThemeToggle size="sm" />
+              <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-expanded={isOpen}
+                aria-label={isOpen ? "Close navigation" : "Open navigation"}
+                className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+              >
+                {isOpen ? (
+                  <X className="h-5 w-5" aria-hidden="true" />
+                ) : (
+                  <Menu className="h-5 w-5" aria-hidden="true" />
+                )}
+              </button>
+            </div>
           </div>
 
           {isOpen && (
-            <div className="border-t border-slate-100 py-3 md:hidden">
+            <div className="border-t border-slate-100 py-3 dark:border-slate-800 md:hidden">
               <div className="flex flex-col gap-1">
                 {navigation.map((item) => (
                   <Link
@@ -153,8 +161,8 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                     className={[
                       "rounded-lg px-3 py-2.5 text-sm font-medium",
                       isActive(item.href)
-                        ? "bg-sky-100 text-primary"
-                        : "text-slate-600 hover:bg-slate-100",
+                        ? "bg-sky-100 text-primary dark:bg-sky-950/70 dark:text-sky-300"
+                        : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800",
                     ].join(" ")}
                   >
                     {item.label}
@@ -166,8 +174,8 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                   className={[
                     "rounded-lg px-3 py-2.5 text-sm font-medium",
                     isActive("/settings")
-                      ? "bg-sky-100 text-primary"
-                      : "text-slate-600 hover:bg-slate-100",
+                      ? "bg-sky-100 text-primary dark:bg-sky-950/70 dark:text-sky-300"
+                      : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800",
                   ].join(" ")}
                 >
                   Settings
@@ -178,7 +186,7 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                     setIsOpen(false);
                     setShowLogoutModal(true);
                   }}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 text-left cursor-pointer"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30 text-left cursor-pointer"
                 >
                   <LogOut className="h-4 w-4" /> Sign out
                 </button>
@@ -198,4 +206,3 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
     </>
   );
 }
-

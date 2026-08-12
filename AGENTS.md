@@ -116,6 +116,8 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Refine History & Activity row cards: remove hidden `opacity-0` Preview text to eliminate right-side whitespace gaps, and upgrade History row delete action button to an explicit `[Trash Icon] Delete` text button (`frontend/app/history/page.tsx`).
 - [x] Replace default Vercel favicon with official PersonaMail SVG/PNG brand icon in Next.js App Router metadata (`frontend/app/icon.svg`, `frontend/app/favicon.ico`, `frontend/app/layout.tsx`).
 - [x] Overhaul Google Sign-In layout & Logout confirmation modal with intermediate loading animations: created `LoginModal.tsx` and `LogoutModal.tsx` components with account selection loading transition (*"Connecting to Google Workspace..."*), user profile preview card, animated sign-out transition (*"Securing session & signing out..."*), full accessibility controls, and verified zero-error `npm run lint` & `npm run build`.
+- [x] Fix PersonaMail logo click behavior: configured smooth `window.scrollTo({ top: 0, behavior: "smooth" })` when already on the landing page (`/` or `/landing`), avoiding hard page reloads.
+- [x] Implement Light Mode & Dark Mode toggle system across Landing Page and Dashboard workspace: created `ThemeProvider` context and theme toggle control in `Navbar` and `Footer`, persisted theme in `localStorage` with `prefers-color-scheme` fallback, added dark mode Tailwind CSS utility classes across all sub-pages (Contacts, Generate, Rewrite, Review, History, Templates, Settings, Login, Landing), and verified zero-error `npm run lint` & `npm run build`.
 
 
 

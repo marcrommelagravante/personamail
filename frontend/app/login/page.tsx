@@ -45,17 +45,17 @@ function LoginContent() {
         </p>
       </div>
 
-      {/* Right Panel - White Surface with Embedded Login Card */}
-      <div className="flex flex-col justify-center bg-slate-50 p-6 sm:p-12 lg:p-16">
+      {/* Right Panel - Surface with Embedded Login Card */}
+      <div className="flex flex-col justify-center bg-slate-50 p-6 dark:bg-slate-950 sm:p-12 lg:p-16">
         <div className="mx-auto w-full max-w-md">
           {loggedOut && !dismissToast && (
             <div
-              className="animate-slide-down-fade mb-6 flex items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm font-medium text-sky-900 shadow-xs"
+              className="animate-slide-down-fade mb-6 flex items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm font-medium text-sky-900 shadow-xs dark:border-sky-900/60 dark:bg-sky-950/50 dark:text-sky-200"
               role="status"
             >
               <div className="flex items-center gap-2.5">
                 <CheckCircle2
-                  className="h-5 w-5 shrink-0 text-sky-600"
+                  className="h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400"
                   aria-hidden="true"
                 />
                 <span>Signed out of PersonaMail</span>
@@ -63,7 +63,7 @@ function LoginContent() {
               <button
                 type="button"
                 onClick={() => setDismissToast(true)}
-                className="cursor-pointer text-xs font-semibold text-sky-700 hover:text-sky-900"
+                className="cursor-pointer text-xs font-semibold text-sky-700 hover:text-sky-900 dark:text-sky-400 dark:hover:text-sky-200"
               >
                 Dismiss
               </button>
@@ -72,12 +72,12 @@ function LoginContent() {
 
           {authError && !dismissError && (
             <div
-              className="animate-slide-down-fade mb-6 flex items-center justify-between gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-medium text-rose-900 shadow-xs"
+              className="animate-slide-down-fade mb-6 flex items-center justify-between gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-medium text-rose-900 shadow-xs dark:border-rose-900/60 dark:bg-rose-950/50 dark:text-rose-200"
               role="alert"
             >
               <div className="flex items-center gap-2.5">
                 <AlertCircle
-                  className="h-5 w-5 shrink-0 text-rose-600"
+                  className="h-5 w-5 shrink-0 text-rose-600 dark:text-rose-400"
                   aria-hidden="true"
                 />
                 <span>
@@ -89,7 +89,7 @@ function LoginContent() {
               <button
                 type="button"
                 onClick={() => setDismissError(true)}
-                className="cursor-pointer text-xs font-semibold text-rose-700 hover:text-rose-900"
+                className="cursor-pointer text-xs font-semibold text-rose-700 hover:text-rose-900 dark:text-rose-400 dark:hover:text-rose-200"
               >
                 Dismiss
               </button>
@@ -107,8 +107,8 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-slate-50">
-          <p className="text-sm text-slate-500">Loading sign in…</p>
+        <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
+          <p className="text-sm text-slate-500 dark:text-slate-400">Loading sign in…</p>
         </div>
       }
     >
@@ -116,4 +116,3 @@ export default function LoginPage() {
     </Suspense>
   );
 }
-
