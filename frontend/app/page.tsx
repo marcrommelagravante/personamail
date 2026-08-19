@@ -24,6 +24,7 @@ import Footer from "./components/Footer";
 import { API_URL, fetchWithAuth } from "./lib/api";
 
 import LandingPage from "./components/LandingPage";
+import { DashboardSkeleton } from "./components/SkeletonLoaders";
 
 type User = { id: string; email: string; name: string; picture: string };
 
@@ -569,93 +570,7 @@ function HomeContent() {
   );
 }
 
-function DashboardSkeleton() {
-  return (
-    <>
-      <Navbar />
-      <main className="mx-auto w-full flex-1 max-w-7xl px-5 py-8 sm:px-8 sm:py-12" aria-label="Loading workspace">
-        <div className="space-y-8">
-          {/* Hero Banner Skeleton */}
-          <div className="flex flex-col justify-between gap-4 rounded-2xl bg-slate-900/90 px-6 py-6 shadow-xs sm:flex-row sm:items-center sm:px-8">
-            <div className="space-y-2.5">
-              <div className="h-4 w-40 animate-pulse rounded-full bg-slate-700/60" />
-              <div className="h-8 w-64 animate-pulse rounded-xl bg-slate-700/60 sm:w-80" />
-            </div>
-            <div className="h-10 w-44 shrink-0 animate-pulse rounded-xl bg-slate-700/80" />
-          </div>
 
-          {/* Metric Strip Skeleton */}
-          <div className="grid gap-4 sm:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-                <div className="h-10 w-10 shrink-0 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" />
-                <div className="space-y-2 flex-1">
-                  <div className="h-7 w-12 animate-pulse rounded-lg bg-slate-200 dark:bg-slate-800" />
-                  <div className="h-3.5 w-28 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Quick Action Cards Skeleton */}
-          <div className="grid gap-4 md:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-                <div className="h-10 w-10 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" />
-                <div className="mt-4 h-5 w-28 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                <div className="mt-2.5 space-y-1.5">
-                  <div className="h-3.5 w-full animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                  <div className="h-3.5 w-4/5 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                </div>
-                <div className="mt-3 h-3 w-36 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                <div className="mt-5 h-4 w-24 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-              </div>
-            ))}
-          </div>
-
-          {/* Recent Profiles Skeleton */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="h-5 w-32 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-              <div className="h-4 w-20 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-                  <div className="h-8 w-8 animate-pulse rounded-full bg-slate-200 dark:bg-slate-800" />
-                  <div className="space-y-1.5">
-                    <div className="h-3.5 w-20 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                    <div className="h-3 w-28 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Recent Activity Skeleton */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="h-5 w-36 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-              <div className="h-4 w-24 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-            </div>
-            <div className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white shadow-xs dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-6 w-16 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                    <div className="h-4 w-48 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800 sm:w-64" />
-                  </div>
-                  <div className="h-3.5 w-16 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
-  );
-}
 
 export default function Home() {
   return (

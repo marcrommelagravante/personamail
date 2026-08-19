@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { ReviewSkeleton } from "../components/SkeletonLoaders";
 import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   CheckCircle2,
@@ -17,6 +18,7 @@ const API = API_URL;
 
 export default function GrammarCheckPage() {
   const [text, setText] = useState("");
+  const [isMounting, setIsMounting] = useState(true);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [result, setResult] = useState<{
@@ -24,6 +26,14 @@ export default function GrammarCheckPage() {
     changes_summary: string;
   } | null>(null);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setIsMounting(false);
+  }, []);
+
+  if (isMounting) {
+    return <ReviewSkeleton />;
+  }
 
   const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();

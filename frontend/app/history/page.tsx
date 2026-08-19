@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { HistorySkeleton } from "../components/SkeletonLoaders";
 import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   Clock,
@@ -170,6 +171,10 @@ export default function HistoryPage() {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+
+  if (loading) {
+    return <HistorySkeleton />;
+  }
 
   return (
     <>

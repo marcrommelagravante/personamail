@@ -16,6 +16,7 @@ import Logo from "./Logo";
 import ScrollReveal from "./ScrollReveal";
 import LoginModal from "./LoginModal";
 import ThemeToggle from "./ThemeToggle";
+import { LandingPageSkeleton } from "./SkeletonLoaders";
 
 type SampleProfile = {
   id: string;
@@ -710,7 +711,7 @@ function LandingPageContent() {
 
 export default function LandingPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<LandingPageSkeleton />}>
       <LandingPageContent />
     </Suspense>
   );

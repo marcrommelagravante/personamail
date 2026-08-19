@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { ImproveSkeleton } from "../components/SkeletonLoaders";
 import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   RefreshCw,
@@ -27,6 +28,7 @@ export default function RewritePage() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [contactId, setContactId] = useState("");
   const [originalText, setOriginalText] = useState("");
+  const [isLoadingContacts, setIsLoadingContacts] = useState(true);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [result, setResult] = useState<{
@@ -41,7 +43,8 @@ export default function RewritePage() {
       .then((data) => setContacts(data))
       .catch(() => {
         // Quiet fallback if contacts load fails
-      });
+      })
+      .finally(() => setIsLoadingContacts(false));
   }, []);
 
   const handleRewrite = async (e: React.FormEvent) => {
@@ -85,6 +88,10 @@ export default function RewritePage() {
 
   const inputClass =
     "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-sky-400 dark:focus:ring-sky-400/20";
+
+  if (isLoadingContacts) {
+    return <ImproveSkeleton />;
+  }
 
   return (
     <>

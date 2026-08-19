@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { ContactsSkeleton } from "../components/SkeletonLoaders";
 import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   Plus,
@@ -204,6 +205,10 @@ export default function ContactsPage() {
 
   const inputClass =
     "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-sky-400 dark:focus:ring-sky-400/20";
+
+  if (loading) {
+    return <ContactsSkeleton />;
+  }
 
   return (
     <>

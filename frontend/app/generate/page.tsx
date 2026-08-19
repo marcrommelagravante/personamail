@@ -4,6 +4,7 @@ import { Check, Copy, Loader2, Mail, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { ComposeSkeleton } from "../components/SkeletonLoaders";
 import { API_URL, fetchWithAuth } from "../lib/api";
 
 type Contact = { id: string; name: string; relationship: string; tone: string };
@@ -70,6 +71,10 @@ export default function GeneratePage() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (isLoadingContacts) {
+    return <ComposeSkeleton />;
+  }
 
   return (
     <>

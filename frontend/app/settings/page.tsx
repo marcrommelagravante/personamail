@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
+import { SettingsSkeleton } from "../components/SkeletonLoaders";
 import { API_URL, fetchWithAuth } from "../lib/api";
 
 const initialSettings = {
@@ -77,6 +78,10 @@ export default function SettingsPage() {
   const inputClass =
     "w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-sky-400 dark:focus:ring-sky-400/20";
 
+  if (loading) {
+    return <SettingsSkeleton />;
+  }
+
   return (
     <>
       <Navbar />
@@ -107,8 +112,6 @@ export default function SettingsPage() {
               Sign in with Google
             </button>
           </div>
-        ) : loading ? (
-          <p className="text-sm text-slate-500 dark:text-slate-400">Loading settings…</p>
         ) : (
           <div className="space-y-6">
             <form
