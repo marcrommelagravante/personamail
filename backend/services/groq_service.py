@@ -70,7 +70,7 @@ FALLBACK_MODELS = [
 ]
 
 
-def _call_groq_chat_completion(messages: list[dict], temperature: float = 0.7) -> str:
+def _call_groq_chat_completion(messages: Any, temperature: float = 0.7) -> str:
     """Execute Groq chat completion with automatic model fallbacks for decommissioned/unavailable models."""
     # Deduplicate fallback models while preserving order
     candidate_models = list(dict.fromkeys(m for m in FALLBACK_MODELS if m))
@@ -80,8 +80,8 @@ def _call_groq_chat_completion(messages: list[dict], temperature: float = 0.7) -
         try:
             response = client.chat.completions.create(
                 model=model_name,
-                messages=messages,
-                response_format={"type": "json_object"},
+                messages=messages,  # pyrefly: ignore # type: ignore
+                response_format={"type": "json_object"},  # pyrefly: ignore # type: ignore
                 temperature=temperature,
             )
             return response.choices[0].message.content or ""
