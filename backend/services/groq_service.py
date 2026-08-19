@@ -61,6 +61,55 @@ def parse_and_sanitize_json(raw_text: str, fallback_dict: Dict[str, Any]) -> Dic
     return {k: sanitize_text(v) if isinstance(v, str) else v for k, v in fallback_dict.items()}
 
 
+FALLBACK_MODELS = [
+    settings.GROQ_MODEL,
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+    "groq/compound",
+    "groq/compound-mini",
+]
+
+
+def _call_groq_chat_completion(messages: list[dict], temperature: float = 0.7) -> str:
+    """Execute Groq chat completion with automatic model fallbacks for decommissioned/unavailable models."""
+    # Deduplicate fallback models while preserving order
+    candidate_models = list(dict.fromkeys(m for m in FALLBACK_MODELS if m))
+    last_error = None
+
+    for model_name in candidate_models:
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=messages,
+                response_format={"type": "json_object"},
+                temperature=temperature,
+            )
+            return response.choices[0].message.content or ""
+        except groq.RateLimitError as exc:
+            logger.error(f"Groq API rate limit exceeded on model {model_name}: {exc}")
+            raise AIServiceException("AI provider request limit reached. Please wait a moment before trying again.", status_code=429)
+        except groq.BadRequestError as exc:
+            # Model decommissioned or invalid request
+            logger.warning(f"Groq BadRequestError with model {model_name}: {exc}. Trying next candidate model...")
+            last_error = exc
+            continue
+        except groq.NotFoundError as exc:
+            # Model not found or no access
+            logger.warning(f"Groq NotFoundError with model {model_name}: {exc}. Trying next candidate model...")
+            last_error = exc
+            continue
+        except (groq.APITimeoutError, groq.APIConnectionError) as exc:
+            logger.error(f"Groq API timeout/connection error: {exc}")
+            raise AIServiceException("AI service connection timed out. Please try again shortly.", status_code=503)
+        except groq.GroqError as exc:
+            logger.error(f"Groq API error on model {model_name}: {exc}")
+            last_error = exc
+            continue
+
+    logger.error(f"All Groq candidate models failed. Last error: {last_error}")
+    raise AIServiceException("Unable to process email AI request right now. Please try again.", status_code=503)
+
+
 def generate_email(
     purpose: str,
     contact_name: str,
@@ -81,28 +130,18 @@ def generate_email(
     )
 
     try:
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+        raw_output = _call_groq_chat_completion(
             messages=[
                 {"role": "system", "content": COMPOSE_SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt},
             ],
-            response_format={"type": "json_object"},
             temperature=0.7,
         )
-        raw_output = response.choices[0].message.content or ""
         fallback = {"subject": "Generated Email", "body": raw_output}
         return parse_and_sanitize_json(raw_output, fallback)
 
-    except groq.RateLimitError as exc:
-        logger.error(f"Groq API rate limit exceeded: {exc}")
-        raise AIServiceException("AI provider request limit reached. Please wait a moment before trying again.", status_code=429)
-    except (groq.APITimeoutError, groq.APIConnectionError) as exc:
-        logger.error(f"Groq API timeout/connection error: {exc}")
-        raise AIServiceException("AI service connection timed out. Please try again shortly.", status_code=503)
-    except groq.GroqError as exc:
-        logger.error(f"Groq API error during generate_email: {exc}")
-        raise AIServiceException("Unable to generate email right now. Please try again.", status_code=503)
+    except AIServiceException:
+        raise
     except Exception as exc:
         logger.error(f"Unexpected error during generate_email: {exc}")
         raise AIServiceException("An unexpected error occurred while generating your email.", status_code=500)
@@ -128,28 +167,18 @@ def rewrite_email(
     )
 
     try:
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+        raw_output = _call_groq_chat_completion(
             messages=[
                 {"role": "system", "content": IMPROVE_SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt},
             ],
-            response_format={"type": "json_object"},
             temperature=0.7,
         )
-        raw_output = response.choices[0].message.content or ""
         fallback = {"subject": "Improved Email", "body": raw_output}
         return parse_and_sanitize_json(raw_output, fallback)
 
-    except groq.RateLimitError as exc:
-        logger.error(f"Groq API rate limit exceeded: {exc}")
-        raise AIServiceException("AI provider request limit reached. Please wait a moment before trying again.", status_code=429)
-    except (groq.APITimeoutError, groq.APIConnectionError) as exc:
-        logger.error(f"Groq API timeout/connection error: {exc}")
-        raise AIServiceException("AI service connection timed out. Please try again shortly.", status_code=503)
-    except groq.GroqError as exc:
-        logger.error(f"Groq API error during rewrite_email: {exc}")
-        raise AIServiceException("Unable to improve email right now. Please try again.", status_code=503)
+    except AIServiceException:
+        raise
     except Exception as exc:
         logger.error(f"Unexpected error during rewrite_email: {exc}")
         raise AIServiceException("An unexpected error occurred while improving your email.", status_code=500)
@@ -159,28 +188,18 @@ def check_grammar(text: str) -> dict:
     user_prompt = build_review_user_prompt(text)
 
     try:
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+        raw_output = _call_groq_chat_completion(
             messages=[
                 {"role": "system", "content": REVIEW_SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt},
             ],
-            response_format={"type": "json_object"},
             temperature=0.3,
         )
-        raw_output = response.choices[0].message.content or ""
         fallback = {"corrected_text": raw_output, "changes_summary": "Proofread text complete."}
         return parse_and_sanitize_json(raw_output, fallback)
 
-    except groq.RateLimitError as exc:
-        logger.error(f"Groq API rate limit exceeded: {exc}")
-        raise AIServiceException("AI provider request limit reached. Please wait a moment before trying again.", status_code=429)
-    except (groq.APITimeoutError, groq.APIConnectionError) as exc:
-        logger.error(f"Groq API timeout/connection error: {exc}")
-        raise AIServiceException("AI service connection timed out. Please try again shortly.", status_code=503)
-    except groq.GroqError as exc:
-        logger.error(f"Groq API error during check_grammar: {exc}")
-        raise AIServiceException("Unable to review email right now. Please try again.", status_code=503)
+    except AIServiceException:
+        raise
     except Exception as exc:
         logger.error(f"Unexpected error during check_grammar: {exc}")
         raise AIServiceException("An unexpected error occurred while reviewing your email.", status_code=500)
