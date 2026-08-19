@@ -134,8 +134,46 @@ Maria
 
 ---
 
+## Variable Placeholders & Fill-in Fields (Zero Hallucination)
+
+PersonaMail strictly prohibits hallucinating or making up imaginary names, dates, course codes, assignment titles, figures, student IDs, or facts. 
+
+Whenever specific information is missing or must be provided by the user, the AI outputs explicit **bracketed placeholders / fill-in fields** (e.g., `[Your Name]`, `[Assignment Name]`, `[Original Due Date]`, `[Course Code]`, `[Student ID Number]`).
+
+### Placeholder Syntax & Types:
+1. **Single Variable Tag:** `[Your Name]`, `[Assignment Name]`, `[Original Due Date]`, `[Proposed New Date and Time]`, `[Course Code]`, `[Student ID Number]`, `[Professor's Last Name]`, `[Company Name]`
+2. **Choice / Option Field:** `[Select one of the following reasons or insert your own: Due to an unexpected illness / Due to an unforeseen personal emergency / Due to technical difficulties with required research materials]`
+3. **Contextual Guidance Tag:** `[mention brief progress, e.g., the initial research / the first draft]`
+
+### Formal Extension Request Example:
+
+```
+Subject: Extension Request: [Assignment Name] – [Your Name] – [Course Code]
+
+Dear Professor [Professor's Last Name],
+
+I am writing to respectfully request a short extension on the upcoming deadline for the [Assignment Name], which is currently due on [Original Due Date].
+
+[Select one of the following reasons or insert your own: Due to an unexpected illness / Due to an unforeseen personal emergency / Due to technical difficulties with required research materials], I have fallen behind schedule. Despite my best efforts to stay on track, I need a little more time to complete the work to the standard required for this course.
+
+I have already completed [mention brief progress, e.g., the initial research / the first draft] and anticipate that I can submit the finalized assignment by [Proposed New Date and Time].
+
+I understand the importance of sticking to the course syllabus and appreciate your time and consideration of my request. Please let me know if this proposed timeline works for you or if you need any additional details.
+
+Thank you for your understanding.
+
+Sincerely,
+
+[Your Name]
+[Student ID Number]
+[Course Name & Section]
+```
+
+---
+
 ## Implementation Notes
 
 - The 7-part structure can be encoded as a fixed template; only the tone-specific phrasing/wording rules need to vary per selection (Formal / Friendly / Casual).
 - Signature block detail scales down with tone: Formal keeps full name + title + company, Friendly keeps first name + optional title, Casual drops it to first name only.
-- This structure applies to the **Compose** (generate) feature. The **Improve** (rewrite) feature would take an existing draft and re-map it into one of these three structures/tones rather than generating fresh content.
+- Unspecified details must always use bracketed placeholders (`[...]`) rather than fabricated names/dates/numbers.
+- This structure applies to the **Compose** (generate) feature. The **Improve** (rewrite) feature would take an existing draft and re-map it into one of these three structures/tones rather than generating fresh content.

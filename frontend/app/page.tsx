@@ -25,6 +25,7 @@ import { API_URL, fetchWithAuth } from "./lib/api";
 
 import LandingPage from "./components/LandingPage";
 import { DashboardSkeleton } from "./components/SkeletonLoaders";
+import PlaceholderHighlighter from "./components/PlaceholderHighlighter";
 
 type User = { id: string; email: string; name: string; picture: string };
 
@@ -516,7 +517,7 @@ function HomeContent() {
                     Subject
                   </h3>
                   <p className="mt-1 font-semibold text-primary text-base dark:text-white">
-                    {previewItem.subject}
+                    <PlaceholderHighlighter text={previewItem.subject} />
                   </p>
                 </div>
               )}
@@ -524,8 +525,8 @@ function HomeContent() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   Body Output
                 </p>
-                <div className="mt-1.5 max-h-60 overflow-y-auto rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-800 dark:bg-slate-950 dark:text-slate-200 whitespace-pre-wrap border border-slate-200 dark:border-slate-800 font-sans">
-                  {previewItem.output_text}
+                <div className="mt-1.5 max-h-60 overflow-y-auto rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-800 dark:bg-slate-950 dark:text-slate-200 border border-slate-200 dark:border-slate-800 font-sans">
+                  <PlaceholderHighlighter text={previewItem.output_text} />
                 </div>
               </div>
             </div>

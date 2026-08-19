@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { TemplatesSkeleton } from "../components/SkeletonLoaders";
+import PlaceholderHighlighter from "../components/PlaceholderHighlighter";
 import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   FileText,
@@ -466,13 +467,15 @@ export default function TemplatesPage() {
                         </button>
                       </div>
 
-                      <h2 className="mt-3 font-semibold text-slate-900 dark:text-white">{template.name}</h2>
+                      <h2 className="mt-3 font-semibold text-slate-900 dark:text-white">
+                        <PlaceholderHighlighter text={template.name} />
+                      </h2>
                       <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
-                        Subject: {template.subject}
+                        Subject: <PlaceholderHighlighter text={template.subject} />
                       </p>
-                      <p className="mt-3 line-clamp-4 whitespace-pre-wrap text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                        {template.body}
-                      </p>
+                      <div className="mt-3 line-clamp-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                        <PlaceholderHighlighter text={template.body} />
+                      </div>
                     </div>
 
                     <div className="mt-5 flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">

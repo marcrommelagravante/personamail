@@ -1,10 +1,13 @@
 "use client";
 
-import { Check, Copy, Loader2, Mail, UserRound } from "lucide-react";
+import { Check, Copy, Edit3, Eye, Loader2, Mail, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { ComposeSkeleton } from "../components/SkeletonLoaders";
+import PlaceholderHighlighter, {
+  PlaceholderSummaryBanner,
+} from "../components/PlaceholderHighlighter";
 import { API_URL, fetchWithAuth } from "../lib/api";
 
 type Contact = { id: string; name: string; relationship: string; tone: string };
@@ -20,6 +23,9 @@ export default function GeneratePage() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [result, setResult] = useState<Message | null>(null);
+  const [editedSubject, setEditedSubject] = useState("");
+  const [editedBody, setEditedBody] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -43,6 +49,7 @@ export default function GeneratePage() {
     event.preventDefault();
     setError("");
     setResult(null);
+    setIsEditing(false);
     if (!contactId) {
       setError("Choose who this message is for before composing.");
       return;
@@ -55,7 +62,10 @@ export default function GeneratePage() {
         body: JSON.stringify({ contact_id: contactId, purpose }),
       });
       if (!response.ok) throw new Error("Could not compose message");
-      setResult(await response.json());
+      const data: Message = await response.json();
+      setResult(data);
+      setEditedSubject(data.subject);
+      setEditedBody(data.body);
     } catch {
       setError("We couldn’t prepare your message. Please try again.");
     } finally {
@@ -64,9 +74,11 @@ export default function GeneratePage() {
   };
 
   const copyToClipboard = () => {
-    if (!result) return;
+    const subjectToCopy = isEditing || editedSubject ? editedSubject : result?.subject;
+    const bodyToCopy = isEditing || editedBody ? editedBody : result?.body;
+    if (!bodyToCopy && !subjectToCopy) return;
     void navigator.clipboard.writeText(
-      `Subject: ${result.subject}\n\n${result.body}`,
+      `Subject: ${subjectToCopy || ""}\n\n${bodyToCopy || ""}`,
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -147,8 +159,7 @@ export default function GeneratePage() {
                   className="w-full resize-y rounded-xl border border-slate-300 px-3 py-3 text-sm leading-6 outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-sky-400 dark:focus:ring-sky-400/20"
                 />
                 <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                  Include the key fact, your request, and any deadline or next
-                  step.
+                  Include the key fact, your request, and any deadline or next step.
                 </p>
               </div>
               {error && (
@@ -212,30 +223,90 @@ export default function GeneratePage() {
                     </p>
                     <h2 className="mt-1 font-semibold text-slate-900 dark:text-white">Your message</h2>
                   </div>
-                  <button
-                    type="button"
-                    onClick={copyToClipboard}
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-primary transition-all hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 active:scale-95"
-                  >
-                    {copied ? (
-                      <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
-                    ) : (
-                      <Copy className="h-4 w-4" aria-hidden="true" />
-                    )}
-                    {copied ? <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Copied</span> : "Copy"}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(!isEditing)}
+                      className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-slate-300 px-2.5 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 active:scale-95"
+                      title={isEditing ? "View highlighted tags" : "Edit draft text"}
+                    >
+                      {isEditing ? (
+                        <>
+                          <Eye className="h-3.5 w-3.5" /> View
+                        </>
+                      ) : (
+                        <>
+                          <Edit3 className="h-3.5 w-3.5" /> Edit
+                        </>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={copyToClipboard}
+                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-primary transition-all hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 active:scale-95"
+                    >
+                      {copied ? (
+                        <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                      ) : (
+                        <Copy className="h-4 w-4" aria-hidden="true" />
+                      )}
+                      {copied ? <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Copied</span> : "Copy"}
+                    </button>
+                  </div>
                 </div>
-                <div className="mt-5 border-y border-slate-100 py-4 dark:border-slate-800">
+
+                <div className="mt-4">
+                  <PlaceholderSummaryBanner
+                    subject={editedSubject}
+                    body={editedBody}
+                    onEditClick={() => setIsEditing(!isEditing)}
+                    isEditing={isEditing}
+                  />
+                </div>
+
+                <div className="border-y border-slate-100 py-3 dark:border-slate-800">
                   <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                     Subject
                   </p>
-                  <p className="mt-1 font-medium text-primary dark:text-white">
-                    {result.subject}
-                  </p>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editedSubject}
+                      onChange={(e) => setEditedSubject(e.target.value)}
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-medium text-primary outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  ) : (
+                    <p className="mt-1 font-medium text-primary dark:text-white">
+                      <PlaceholderHighlighter
+                        text={editedSubject}
+                        onPlaceholderClick={() => setIsEditing(true)}
+                      />
+                    </p>
+                  )}
                 </div>
-                <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-slate-700 dark:text-slate-200">
-                  {result.body}
-                </p>
+
+                {isEditing ? (
+                  <div className="mt-4">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Message Body
+                    </label>
+                    <textarea
+                      rows={10}
+                      value={editedBody}
+                      onChange={(e) => setEditedBody(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 bg-white p-3 text-sm leading-6 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
+                ) : (
+                  <div className="mt-4">
+                    <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700 dark:text-slate-200">
+                      <PlaceholderHighlighter
+                        text={editedBody}
+                        onPlaceholderClick={() => setIsEditing(true)}
+                      />
+                    </p>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-950/60">
@@ -254,3 +325,4 @@ export default function GeneratePage() {
     </>
   );
 }
+

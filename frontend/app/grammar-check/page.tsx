@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { ReviewSkeleton } from "../components/SkeletonLoaders";
+import PlaceholderHighlighter, {
+  PlaceholderSummaryBanner,
+} from "../components/PlaceholderHighlighter";
 import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   CheckCircle2,
@@ -12,33 +14,29 @@ import {
   Loader2,
   AlertCircle,
   FileCheck,
+  Edit3,
+  Eye,
 } from "lucide-react";
 
 const API = API_URL;
 
 export default function GrammarCheckPage() {
   const [text, setText] = useState("");
-  const [isMounting, setIsMounting] = useState(true);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [result, setResult] = useState<{
     corrected_text: string;
     changes_summary: string;
   } | null>(null);
+  const [editedText, setEditedText] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    setIsMounting(false);
-  }, []);
-
-  if (isMounting) {
-    return <ReviewSkeleton />;
-  }
 
   const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setResult(null);
+    setIsEditing(false);
     setLoading(true);
 
     try {
@@ -51,6 +49,7 @@ export default function GrammarCheckPage() {
       if (!res.ok) throw new Error("Failed to review text");
       const data = await res.json();
       setResult(data);
+      setEditedText(data.corrected_text);
     } catch {
       setError("We couldn’t review your text right now. Please try again.");
     } finally {
@@ -59,8 +58,9 @@ export default function GrammarCheckPage() {
   };
 
   const copyToClipboard = () => {
-    if (!result) return;
-    void navigator.clipboard.writeText(result.corrected_text);
+    const textToCopy = isEditing || editedText ? editedText : result?.corrected_text;
+    if (!textToCopy) return;
+    void navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -139,28 +139,63 @@ export default function GrammarCheckPage() {
                 <FileCheck className="h-4 w-4 text-slate-700 dark:text-slate-300" />
                 <h2 className="font-semibold text-slate-900 dark:text-white">Reviewed Output</h2>
               </div>
-              <button
-                type="button"
-                onClick={copyToClipboard}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 active:scale-95"
-              >
-                {copied ? (
-                  <>
-                    <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3.5 w-3.5" /> Copy text
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(!isEditing)}
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                >
+                  {isEditing ? (
+                    <>
+                      <Eye className="h-3.5 w-3.5" /> View
+                    </>
+                  ) : (
+                    <>
+                      <Edit3 className="h-3.5 w-3.5" /> Edit
+                    </>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={copyToClipboard}
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5" /> Copy text
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
+            <PlaceholderSummaryBanner
+              body={editedText}
+              onEditClick={() => setIsEditing(!isEditing)}
+              isEditing={isEditing}
+            />
+
             <div className="space-y-4">
-              <div className="rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-800 dark:bg-slate-950 dark:text-slate-200 whitespace-pre-wrap">
-                {result.corrected_text}
-              </div>
+              {isEditing ? (
+                <textarea
+                  rows={10}
+                  value={editedText}
+                  onChange={(e) => setEditedText(e.target.value)}
+                  className="w-full rounded-xl border border-slate-300 bg-white p-3 text-sm leading-6 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                />
+              ) : (
+                <div className="rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-800 dark:bg-slate-950 dark:text-slate-200 whitespace-pre-wrap">
+                  <PlaceholderHighlighter
+                    text={editedText}
+                    onPlaceholderClick={() => setIsEditing(true)}
+                  />
+                </div>
+              )}
 
               {result.changes_summary && (
                 <p className="text-xs text-slate-500 dark:text-slate-400 italic">
@@ -175,3 +210,4 @@ export default function GrammarCheckPage() {
     </>
   );
 }
+

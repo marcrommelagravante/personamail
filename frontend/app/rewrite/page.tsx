@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { ImproveSkeleton } from "../components/SkeletonLoaders";
+import PlaceholderHighlighter, {
+  PlaceholderSummaryBanner,
+} from "../components/PlaceholderHighlighter";
 import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   RefreshCw,
@@ -13,6 +16,8 @@ import {
   AlertCircle,
   Sliders,
   FileText,
+  Edit3,
+  Eye,
 } from "lucide-react";
 
 type Contact = {
@@ -35,6 +40,9 @@ export default function RewritePage() {
     subject: string;
     body: string;
   } | null>(null);
+  const [editedSubject, setEditedSubject] = useState("");
+  const [editedBody, setEditedBody] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -51,6 +59,7 @@ export default function RewritePage() {
     e.preventDefault();
     setError("");
     setResult(null);
+    setIsEditing(false);
 
     if (!contactId) {
       setError("Please select a contact to apply their communication profile.");
@@ -71,6 +80,8 @@ export default function RewritePage() {
       if (!res.ok) throw new Error("Failed to improve draft");
       const data = await res.json();
       setResult(data);
+      setEditedSubject(data.subject);
+      setEditedBody(data.body);
     } catch {
       setError("We couldn’t improve your draft right now. Please try again.");
     } finally {
@@ -79,8 +90,10 @@ export default function RewritePage() {
   };
 
   const copyToClipboard = () => {
-    if (!result) return;
-    const textToCopy = `Subject: ${result.subject}\n\n${result.body}`;
+    const subjectToCopy = isEditing || editedSubject ? editedSubject : result?.subject;
+    const bodyToCopy = isEditing || editedBody ? editedBody : result?.body;
+    if (!bodyToCopy && !subjectToCopy) return;
+    const textToCopy = `Subject: ${subjectToCopy || ""}\n\n${bodyToCopy || ""}`;
     void navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -189,35 +202,85 @@ export default function RewritePage() {
                 <FileText className="h-4 w-4 text-slate-700 dark:text-slate-300" />
                 <h2 className="font-semibold text-slate-900 dark:text-white">Improved Message</h2>
               </div>
-              <button
-                type="button"
-                onClick={copyToClipboard}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 active:scale-95"
-              >
-                {copied ? (
-                  <>
-                    <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3.5 w-3.5" /> Copy message
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(!isEditing)}
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 active:scale-95"
+                >
+                  {isEditing ? (
+                    <>
+                      <Eye className="h-3.5 w-3.5" /> View
+                    </>
+                  ) : (
+                    <>
+                      <Edit3 className="h-3.5 w-3.5" /> Edit
+                    </>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={copyToClipboard}
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 active:scale-95"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5" /> Copy message
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
+
+            <PlaceholderSummaryBanner
+              subject={editedSubject}
+              body={editedBody}
+              onEditClick={() => setIsEditing(!isEditing)}
+              isEditing={isEditing}
+            />
 
             <div className="space-y-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">Subject</p>
-                <p className="mt-1 font-semibold text-slate-900 dark:text-white">{result.subject}</p>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={editedSubject}
+                    onChange={(e) => setEditedSubject(e.target.value)}
+                    className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-medium text-primary outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                  />
+                ) : (
+                  <p className="mt-1 font-semibold text-slate-900 dark:text-white">
+                    <PlaceholderHighlighter
+                      text={editedSubject}
+                      onPlaceholderClick={() => setIsEditing(true)}
+                    />
+                  </p>
+                )}
               </div>
 
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">Body</p>
-                <div className="mt-1 rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-800 dark:bg-slate-950 dark:text-slate-200 whitespace-pre-wrap">
-                  {result.body}
-                </div>
+                {isEditing ? (
+                  <textarea
+                    rows={10}
+                    value={editedBody}
+                    onChange={(e) => setEditedBody(e.target.value)}
+                    className="mt-1 w-full rounded-xl border border-slate-300 bg-white p-3 text-sm leading-6 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                  />
+                ) : (
+                  <div className="mt-1 rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                    <PlaceholderHighlighter
+                      text={editedBody}
+                      onPlaceholderClick={() => setIsEditing(true)}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -227,3 +290,4 @@ export default function RewritePage() {
     </>
   );
 }
+

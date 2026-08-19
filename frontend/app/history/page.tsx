@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { HistorySkeleton } from "../components/SkeletonLoaders";
+import PlaceholderHighlighter from "../components/PlaceholderHighlighter";
 import { API_URL, fetchWithAuth } from "../lib/api";
 import {
   Clock,
@@ -500,7 +501,11 @@ export default function HistoryPage() {
                   Subject / Heading
                 </h3>
                 <p className="mt-1 font-semibold text-slate-900 dark:text-white text-base">
-                  {selectedItem.subject || "No Subject Line"}
+                  {selectedItem.subject ? (
+                    <PlaceholderHighlighter text={selectedItem.subject} />
+                  ) : (
+                    "No Subject Line"
+                  )}
                 </p>
               </div>
 
@@ -519,8 +524,8 @@ export default function HistoryPage() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   Generated Output
                 </p>
-                <div className="mt-1.5 max-h-60 overflow-y-auto rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-800 whitespace-pre-wrap border border-slate-200 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
-                  {selectedItem.output_text}
+                <div className="mt-1.5 max-h-60 overflow-y-auto rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-800 border border-slate-200 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                  <PlaceholderHighlighter text={selectedItem.output_text} />
                 </div>
               </div>
 
