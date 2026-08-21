@@ -8,7 +8,6 @@ import {
   PenLine,
   RefreshCw,
   ShieldCheck,
-  UserRound,
   Users,
 } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
@@ -17,51 +16,9 @@ import ScrollReveal from "./ScrollReveal";
 import LoginModal from "./LoginModal";
 import ThemeToggle from "./ThemeToggle";
 import { LandingPageSkeleton } from "./SkeletonLoaders";
+import InteractiveFeatureDemo from "./landing/InteractiveFeatureDemo";
 
-type SampleProfile = {
-  id: string;
-  name: string;
-  relationship: string;
-  tone: string;
-  composeSubject: string;
-  composeBody: string;
-  improveOriginal: string;
-  improveResult: string;
-  reviewResult: string;
-};
 
-const sampleProfiles: SampleProfile[] = [
-  {
-    id: "sarah",
-    name: "Sarah Jenkins",
-    relationship: "Client",
-    tone: "Formal",
-    composeSubject: "Q3 Project Milestone Update & Next Steps",
-    composeBody:
-      "Dear Sarah,\n\nI am pleased to share that we have finalized the Q3 milestone deliverables ahead of schedule. Attached is the summary for your review.\n\nPlease let me know if you would like to schedule a brief call this Thursday to discuss the next deployment phase.\n\nBest regards,\nAlex",
-    improveOriginal:
-      "Hey Sarah, finished the Q3 stuff early. Let me know if you want to chat Thursday.",
-    improveResult:
-      "Dear Sarah,\n\nI am glad to update you that our team completed the Q3 milestone early. Please review the attached deliverables at your convenience.\n\nWould Thursday afternoon work for a brief check-in regarding phase two?\n\nSincerely,\nAlex",
-    reviewResult:
-      "Dear Sarah,\n\nI am writing to confirm that all Q3 milestones are complete. Attached is the project breakdown for your evaluation.\n\nLet me know if Thursday works for a short alignment meeting.\n\nBest regards,\nAlex",
-  },
-  {
-    id: "marcus",
-    name: "Marcus Vance",
-    relationship: "Colleague",
-    tone: "Casual",
-    composeSubject: "Quick sync on tomorrow's sprint review",
-    composeBody:
-      "Hey Marcus,\n\nQuick heads up — I just pushed the draft API specs for tomorrow's review. Take a look when you get a sec and let me know if anything looks off.\n\nCatch you at the standup,\nAlex",
-    improveOriginal:
-      "Marcus, I uploaded the API docs. Look at them before tomorrow.",
-    improveResult:
-      "Hey Marcus,\n\nJust dropped the updated API docs into the shared folder for tomorrow's review. Give them a quick skim whenever you have a free minute!\n\nThanks,\nAlex",
-    reviewResult:
-      "Hey Marcus,\n\nThe API specifications for tomorrow's sprint review are ready. Feel free to review them before standup tomorrow morning.\n\nCheers,\nAlex",
-  },
-];
 
 function LandingPageContent() {
   const searchParams = useSearchParams();
@@ -70,12 +27,7 @@ function LandingPageContent() {
   const [isToastFading, setIsToastFading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const [activeProfile, setActiveProfile] = useState<SampleProfile>(
-    sampleProfiles[0],
-  );
-  const [activeTab, setActiveTab] = useState<"compose" | "improve" | "review">(
-    "compose",
-  );
+
 
   useEffect(() => {
     if (loggedOut && !dismissToast) {
@@ -217,143 +169,7 @@ function LandingPageContent() {
 
           {/* Single Prominent Interactive Product Preview Visual */}
           <ScrollReveal delayMs={100} scale={0.96} className="mx-auto mt-12 max-w-5xl">
-            <div className="relative rounded-3xl border border-slate-200/90 bg-white p-4 shadow-xl dark:border-slate-800 dark:bg-slate-900 sm:p-6 lg:p-8">
-              <div className="mb-4 flex flex-col gap-4 border-b border-slate-100 pb-4 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
-                {/* Profile Picker Pill Buttons */}
-                <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                    Select Recipient:
-                  </span>
-                  {sampleProfiles.map((profile) => (
-                    <button
-                      key={profile.id}
-                      type="button"
-                      onClick={() => setActiveProfile(profile)}
-                      className={`inline-flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-all duration-150 hover:-translate-y-0.5 active:scale-95 ${
-                        activeProfile.id === profile.id
-                          ? "bg-primary text-white shadow-xs dark:bg-sky-500 dark:text-slate-950"
-                          : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                      }`}
-                    >
-                      <UserRound className="h-3.5 w-3.5" />
-                      {profile.name} ({profile.relationship} · {profile.tone})
-                    </button>
-                  ))}
-                </div>
-
-                {/* Action Tabs */}
-                <div className="inline-flex rounded-xl bg-slate-100 p-1 dark:bg-slate-800">
-                  {(["compose", "improve", "review"] as const).map((tab) => (
-                    <button
-                      key={tab}
-                      type="button"
-                      onClick={() => setActiveTab(tab)}
-                      className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition-all duration-150 hover:-translate-y-0.5 active:scale-95 ${
-                        activeTab === tab
-                          ? "bg-white text-primary shadow-xs dark:bg-slate-900 dark:text-white"
-                          : "text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-white"
-                      }`}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Interactive Preview Container */}
-              <div className="grid gap-6 rounded-2xl bg-slate-50 p-5 dark:bg-slate-950/70 sm:p-6 lg:grid-cols-[280px_1fr]">
-                {/* Context Summary Sidebar */}
-                <div className="space-y-4 rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-100 font-semibold text-primary dark:bg-sky-950 dark:text-sky-300">
-                      {activeProfile.name[0]}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-primary dark:text-white">
-                        {activeProfile.name}
-                      </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        {activeProfile.relationship} Profile
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 border-t border-slate-100 pt-3 text-xs text-slate-600 dark:border-slate-800 dark:text-slate-300">
-                    <div className="flex justify-between">
-                      <span className="text-slate-400 dark:text-slate-500">Communication Style:</span>
-                      <span className="font-medium text-primary dark:text-white">
-                        {activeProfile.tone}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400 dark:text-slate-500">Adaptive Profile:</span>
-                      <span className="font-medium text-emerald-600 dark:text-emerald-400">Active</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Live Preview Display Box */}
-                <div className="space-y-3 rounded-xl border border-slate-200/70 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-                  {activeTab === "compose" && (
-                    <div className="space-y-3">
-                      <div className="border-b border-slate-100 pb-2 dark:border-slate-800">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                          Subject
-                        </span>
-                        <p className="mt-1 font-semibold text-primary dark:text-white">
-                          {activeProfile.composeSubject}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                          Generated Email
-                        </span>
-                        <p className="mt-2 text-sm leading-relaxed text-slate-700 dark:text-slate-200 whitespace-pre-wrap">
-                          {activeProfile.composeBody}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === "improve" && (
-                    <div className="space-y-4">
-                      <div>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                          Rough Input Draft
-                        </span>
-                        <p className="mt-1 rounded-lg bg-slate-50 p-2.5 text-xs text-slate-600 dark:bg-slate-950 dark:text-slate-300">
-                          {activeProfile.improveOriginal}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-sky-700 dark:text-sky-400">
-                          Improved Version ({activeProfile.tone})
-                        </span>
-                        <p className="mt-1 text-sm font-medium leading-relaxed text-slate-800 dark:text-slate-100 whitespace-pre-wrap">
-                          {activeProfile.improveResult}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === "review" && (
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
-                          Grammar &amp; Clarity Check
-                        </span>
-                        <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
-                          Ready to send
-                        </span>
-                      </div>
-                      <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
-                        {activeProfile.reviewResult}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            <InteractiveFeatureDemo feature="compose" />
           </ScrollReveal>
         </div>
       </section>
@@ -714,6 +530,7 @@ import HeroPanel from "./landing/panels/HeroPanel";
 import ProfilesPanel from "./landing/panels/ProfilesPanel";
 import GeneratorPanel from "./landing/panels/GeneratorPanel";
 import RewriterPanel from "./landing/panels/RewriterPanel";
+import ReviewPanel from "./landing/panels/ReviewPanel";
 import WorkflowPanel from "./landing/panels/WorkflowPanel";
 import TrustPanel from "./landing/panels/TrustPanel";
 
@@ -761,6 +578,7 @@ export default function LandingPage() {
             <ProfilesPanel />
             <GeneratorPanel />
             <RewriterPanel />
+            <ReviewPanel />
             <WorkflowPanel />
             <TrustPanel onGetStarted={() => setShowLoginModal(true)} />
           </HorizontalScrollTrack>

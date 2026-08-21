@@ -1,42 +1,10 @@
-import React, { useState } from "react";
-import { ArrowRight, Mail, UserRound } from "lucide-react";
+import React from "react";
+import { ArrowRight, Mail } from "lucide-react";
 import ScrollReveal from "../../ScrollReveal";
 
-type SampleProfile = {
-  id: string;
-  name: string;
-  relationship: string;
-  tone: string;
-  composeSubject: string;
-  composeBody: string;
-};
-
-const sampleProfiles: SampleProfile[] = [
-  {
-    id: "sarah",
-    name: "Sarah Jenkins",
-    relationship: "Client",
-    tone: "Formal",
-    composeSubject: "Q3 Project Milestone Update & Next Steps",
-    composeBody:
-      "Dear Sarah,\n\nI am pleased to share that we have finalized the Q3 milestone deliverables ahead of schedule. Attached is the summary for your review.\n\nPlease let me know if you would like to schedule a brief call this Thursday to discuss the next deployment phase.\n\nBest regards,\nAlex",
-  },
-  {
-    id: "marcus",
-    name: "Marcus Vance",
-    relationship: "Colleague",
-    tone: "Casual",
-    composeSubject: "Quick sync on tomorrow's sprint review",
-    composeBody:
-      "Hey Marcus,\n\nQuick heads up — I just pushed the draft API specs for tomorrow's review. Take a look when you get a sec and let me know if anything looks off.\n\nCatch you at the standup,\nAlex",
-  },
-];
+import InteractiveFeatureDemo from "../InteractiveFeatureDemo";
 
 export default function HeroPanel({ onGetStarted }: { onGetStarted: () => void }) {
-  const [activeProfile, setActiveProfile] = useState<SampleProfile>(
-    sampleProfiles[0]
-  );
-
   return (
     <div className="panel w-screen shrink-0 h-screen flex flex-col justify-center relative overflow-hidden">
       {/* Soft background radial highlight */}
@@ -78,64 +46,8 @@ export default function HeroPanel({ onGetStarted }: { onGetStarted: () => void }
         </ScrollReveal>
 
         {/* Right: Interactive Live Preview */}
-        <ScrollReveal delayMs={200} direction="left" className="relative rounded-3xl border border-slate-200/90 bg-white p-4 shadow-xl dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-          <div className="mb-4 flex flex-col gap-4 border-b border-slate-100 pb-4 dark:border-slate-800">
-            {/* Profile Picker Pill Buttons */}
-            <div className="flex items-center gap-2 overflow-x-auto">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 shrink-0">
-                Hover to switch:
-              </span>
-              {sampleProfiles.map((profile) => (
-                <button
-                  key={profile.id}
-                  type="button"
-                  onMouseEnter={() => setActiveProfile(profile)}
-                  onClick={() => setActiveProfile(profile)}
-                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
-                    activeProfile.id === profile.id
-                      ? "bg-primary text-white shadow-xs dark:bg-sky-500 dark:text-slate-950"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                  }`}
-                >
-                  <UserRound className="h-3.5 w-3.5" />
-                  {profile.name} ({profile.tone})
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-4 rounded-xl border border-slate-200/70 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-950/70">
-            {/* Context Summary Sidebar style integrated */}
-            <div className="flex items-center gap-2.5 mb-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-100 font-semibold text-primary dark:bg-sky-950 dark:text-sky-300">
-                {activeProfile.name[0]}
-              </div>
-              <div>
-                <p className="font-semibold text-primary dark:text-white">
-                  {activeProfile.name}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {activeProfile.relationship} Profile
-                </p>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-slate-200/70 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 transition-all duration-300">
-              <div className="border-b border-slate-100 pb-2 dark:border-slate-800">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                  Subject
-                </span>
-                <p className="mt-1 font-semibold text-primary dark:text-white">
-                  {activeProfile.composeSubject}
-                </p>
-              </div>
-              <div className="pt-2">
-                <p className="mt-2 text-sm leading-relaxed text-slate-700 dark:text-slate-200 whitespace-pre-wrap">
-                  {activeProfile.composeBody}
-                </p>
-              </div>
-            </div>
-          </div>
+        <ScrollReveal delayMs={200} direction="left" className="relative w-full max-w-xl mx-auto lg:max-w-none">
+          <InteractiveFeatureDemo feature="compose" />
         </ScrollReveal>
       </div>
     </div>
