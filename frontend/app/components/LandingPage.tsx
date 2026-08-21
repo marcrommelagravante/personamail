@@ -709,10 +709,68 @@ function LandingPageContent() {
   );
 }
 
+import HorizontalScrollTrack from "./landing/HorizontalScrollTrack";
+import HeroPanel from "./landing/panels/HeroPanel";
+import ProfilesPanel from "./landing/panels/ProfilesPanel";
+import GeneratorPanel from "./landing/panels/GeneratorPanel";
+import RewriterPanel from "./landing/panels/RewriterPanel";
+import WorkflowPanel from "./landing/panels/WorkflowPanel";
+import TrustPanel from "./landing/panels/TrustPanel";
+
 export default function LandingPage() {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   return (
-    <Suspense fallback={<LandingPageSkeleton />}>
-      <LandingPageContent />
-    </Suspense>
+    <>
+      {/* Mobile / Reduced Motion: Vertical Layout */}
+      <div className="block md:hidden motion-reduce:block">
+        <Suspense fallback={<LandingPageSkeleton />}>
+          <LandingPageContent />
+        </Suspense>
+      </div>
+
+      {/* Desktop: Horizontal GSAP Layout */}
+      <div className="hidden md:block motion-reduce:hidden font-sans text-primary antialiased dark:bg-[#0b0f19] dark:text-slate-100">
+        <Suspense fallback={<LandingPageSkeleton />}>
+          {/* We duplicate the Header here so it can be fixed/styled specifically for the desktop layout without breaking mobile */}
+          <header className="fixed w-full top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+              <Logo href="/" variant="full" size="md" onClick={() => window.scrollTo(0,0)} />
+              <div className="flex items-center gap-3">
+                <ThemeToggle size="sm" />
+                <button
+                  type="button"
+                  onClick={() => setShowLoginModal(true)}
+                  className="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-100 hover:text-primary active:scale-95 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white"
+                >
+                  Sign in
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowLoginModal(true)}
+                  className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md active:scale-95 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400"
+                >
+                  Get Started
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <HorizontalScrollTrack>
+            <HeroPanel onGetStarted={() => setShowLoginModal(true)} />
+            <ProfilesPanel />
+            <GeneratorPanel />
+            <RewriterPanel />
+            <WorkflowPanel />
+            <TrustPanel onGetStarted={() => setShowLoginModal(true)} />
+          </HorizontalScrollTrack>
+        </Suspense>
+      </div>
+
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
+    </>
   );
 }
