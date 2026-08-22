@@ -6,7 +6,7 @@ import InteractiveFeatureDemo from "../InteractiveFeatureDemo";
 export default function ReviewPanel() {
   return (
     <div className="panel w-[85vw] shrink-0 h-screen flex flex-col justify-center relative overflow-hidden">
-      <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+      <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 grid lg:grid-cols-[1fr_1.25fr] gap-12 items-center">
         {/* Left: Copy */}
         <ScrollReveal delayMs={100} direction="up" className="max-w-xl pr-8">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 mb-6">

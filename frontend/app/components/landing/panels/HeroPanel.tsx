@@ -13,7 +13,7 @@ export default function HeroPanel({ onGetStarted }: { onGetStarted: () => void }
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-8 grid lg:grid-cols-[1fr_1.2fr] gap-12 items-center">
         {/* Left: Copy */}
         <ScrollReveal delayMs={100} direction="up">
           <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3.5 py-1.5 text-xs font-semibold text-sky-900 dark:border-sky-800 dark:bg-sky-950/60 dark:text-sky-300">

@@ -43,7 +43,7 @@ export default function PlaceholderHighlighter({
               key={index}
               onClick={() => onPlaceholderClick?.(part)}
               title="Fill-in placeholder: replace before sending"
-              className={`inline-flex items-center mx-0.5 px-1.5 py-0.5 rounded-md text-xs font-semibold tracking-wide bg-sky-100 text-sky-800 border border-sky-300 dark:bg-sky-950/80 dark:text-sky-300 dark:border-sky-700/80 transition-all duration-150 ${
+              className={`inline-flex items-center mx-0.5 px-1.5 py-0.5 rounded-md text-[0.9em] font-semibold tracking-wide bg-sky-100/90 text-sky-800 border border-sky-300 dark:bg-sky-950/90 dark:text-sky-300 dark:border-sky-700/80 transition-all duration-150 ${
                 onPlaceholderClick ? "cursor-pointer hover:bg-sky-200 dark:hover:bg-sky-900" : ""
               } ${placeholderClassName}`}
             >

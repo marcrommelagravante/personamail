@@ -122,13 +122,8 @@ verification, and the next active task. Keep this concise and accurate.
 - [x] Implement Sign Out Toast Auto-Fade & Universal Button Hover Animations: added 4-second auto-dismiss with smooth 300ms fade-out transition to the sign-out notification toast in `LandingPage.tsx` and `login/page.tsx`, and added micro-interaction hover animations (`hover:-translate-y-0.5`, `hover:shadow-md`, `active:scale-95`) to all buttons across the Dashboard, Landing Page, Navigation bar, and Footer.
 - [x] Implement Variable Placeholders & Fill-In Fields System (Zero Hallucination): updated backend prompt instructions and builders in `backend/services/prompts.py` to strictly forbid hallucinating imaginary names/dates/courses/IDs and mandate bracketed variable tags (e.g. `[Your Name]`, `[Assignment Name]`, `[Original Due Date]`, `[Proposed New Date and Time]`, `[Select reason: ...]`); updated `docs/email_tone_structure.md`; created `PlaceholderHighlighter.tsx` with accessible chip styling and detection banners; and added live inline draft editing across Compose (`/generate`), Improve (`/rewrite`), Review (`/grammar-check`), Templates (`/templates`), History (`/history`), and Dashboard (`/`).
 - [x] Implement GSAP Horizontal Scroll Landing Page Redesign: refactored `LandingPage.tsx` into a continuous horizontal canvas using GSAP `ScrollTrigger` and a `HorizontalScrollTrack` component; integrated `ScrollReveal` animations for dynamic fade-in effects on individual panels (Hero, Profiles, Generator, Rewriter, Workflow, Trust); removed static panel borders and backgrounds in favor of a unified gradient to create a seamless timeline experience.
-
-
-
-
-
-
-
+- [x] Overhaul Interactive Feature Demo layout for wide horizontal space & compact vertical height: eliminated the narrow internal 280px sidebar in favor of full-width message views; integrated persona selector and live tone/adaptive status badges into a sleek top header; expanded panel grid column ratios (`lg:grid-cols-[1fr_1.25fr]`) across Hero, Profiles, Rewriter, Review, and Generator panels; and verified zero-error `npm run lint` & `npm run build`.
+- [x] Extract unified `<LandingFooter />` component to resolve 100vh desktop scroll bug: moved the footer out of the horizontal scroll track so the page naturally unpins and scrolls vertically down to a premium, dark-themed footer (`#0F172A`) with asymmetric Keeby-style layout and smart anchor links. Restored `<TrustPanel />` to its original split-design layout as the final horizontal panel.
 
 ## Active UI/UX Polish Handoff
 
