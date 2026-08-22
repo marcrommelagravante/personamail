@@ -3,7 +3,7 @@ import ScrollReveal from "../../ScrollReveal";
 
 export default function WorkflowPanel() {
   return (
-    <div className="panel w-[85vw] shrink-0 h-screen flex flex-col justify-center relative overflow-hidden">
+    <div id="workflow" className="panel w-[85vw] shrink-0 h-screen flex flex-col justify-center relative overflow-hidden">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
         <div className="mx-auto max-w-3xl text-center mb-16">
           <h2 className="text-4xl font-semibold tracking-tight text-primary dark:text-white sm:text-5xl">
