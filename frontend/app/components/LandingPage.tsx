@@ -75,31 +75,31 @@ function LandingPageContent() {
       <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24">
         {/* Soft background radial highlight */}
         <div
-          className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-sky-200/40 dark:bg-sky-500/10 blur-3xl"
+          className="pointer-events-none absolute -top-40 left-1/2 h-[400px] w-[640px] -translate-x-1/2 rounded-full bg-sky-200/40 dark:bg-sky-500/10 blur-3xl"
           aria-hidden="true"
         />
 
-        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
           <div className="animate-fade-in-up mx-auto max-w-3xl text-center">
-            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3.5 py-1.5 text-xs font-semibold text-sky-900 dark:border-sky-800 dark:bg-sky-950/60 dark:text-sky-300">
+            <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-[11px] font-semibold text-sky-900 dark:border-sky-800 dark:bg-sky-950/60 dark:text-sky-300">
               <Mail className="h-3.5 w-3.5 text-sky-700 dark:text-sky-400" aria-hidden="true" />
               Relationship-aware communication
             </span>
 
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-primary dark:text-white sm:text-6xl sm:leading-tight">
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-primary dark:text-white sm:text-5xl sm:leading-tight">
               The right words for every relationship.
             </h1>
 
-            <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-300 sm:text-xl sm:leading-8">
+            <p className="mt-5 text-lg leading-7 text-slate-600 dark:text-slate-300 sm:text-lg sm:leading-8">
               PersonaMail learns how you communicate with each person — and helps
               you write emails that sound like you, every time.
             </p>
 
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
               <button
                 type="button"
                 onClick={() => setShowLoginModal(true)}
-                className="group inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-lg active:scale-95 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400 sm:w-auto"
+                className="group inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-lg active:scale-95 dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400 sm:w-auto"
               >
                 Get Started
                 <ArrowRight
@@ -109,7 +109,7 @@ function LandingPageContent() {
               </button>
               <a
                 href="#how-it-works"
-                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-primary hover:shadow-sm active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 sm:w-auto"
+                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-primary hover:shadow-sm active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 sm:w-auto"
               >
                 See how it works
               </a>

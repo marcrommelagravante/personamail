@@ -182,7 +182,11 @@ function HomeContent() {
 
   if (isLogout || !user) {
     if (loading && !isLogout) {
-      return <DashboardSkeleton />;
+      return (
+        <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f19] flex items-center justify-center">
+          {/* Neutral blank screen during auth check to prevent header flashing */}
+        </div>
+      );
     }
     return <LandingPage />;
   }
@@ -575,7 +579,7 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <Suspense fallback={<DashboardSkeleton />}>
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 dark:bg-[#0b0f19] flex items-center justify-center" />}>
       <HomeContent />
     </Suspense>
   );

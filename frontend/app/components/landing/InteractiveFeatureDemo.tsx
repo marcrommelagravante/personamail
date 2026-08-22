@@ -88,7 +88,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
   };
 
   return (
-    <div className="relative rounded-3xl border border-slate-200/90 bg-white p-4 shadow-xl dark:border-slate-800 dark:bg-slate-900 sm:p-6 lg:p-8">
+    <div className="relative rounded-3xl border border-slate-200/90 bg-white p-4 shadow-xl dark:border-slate-800 dark:bg-slate-900 sm:p-5 lg:p-6">
       <div className="mb-4 flex flex-col gap-4 border-b border-slate-100 pb-4 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
         {/* Profile Picker Pill Buttons (Click to switch) */}
         <div className="flex flex-col items-start gap-3 pb-1 sm:pb-0">
@@ -104,7 +104,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                   setActiveProfile(profile);
                   setGenStatus("idle");
                 }}
-                className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
+                className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl px-2.5 py-1 text-[11px] font-medium transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
                   activeProfile.id === profile.id
                     ? "bg-primary text-white shadow-xs dark:bg-sky-500 dark:text-slate-950"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
@@ -119,7 +119,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
       </div>
 
       {/* Interactive Preview Container */}
-      <div className="flex flex-col gap-6 rounded-2xl bg-slate-50 p-5 dark:bg-slate-950/70 sm:p-6">
+      <div className="flex flex-col gap-5 rounded-2xl bg-slate-50 p-4 dark:bg-slate-950/70 sm:p-5">
         
         {/* Context Summary Top Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-800 dark:bg-slate-900 transition-all duration-300">
@@ -141,7 +141,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                   {activeProfile.name[0]}
                 </div>
                 <div className="overflow-hidden">
-                  <p className="truncate font-semibold text-primary dark:text-white text-base">
+                  <p className="truncate font-semibold text-primary dark:text-white text-[15px]">
                     {activeProfile.name}
                   </p>
                   <p className="truncate text-sm text-slate-500 dark:text-slate-400">
@@ -174,7 +174,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
         </div>
 
         {/* Live Preview Display Box */}
-        <div className="relative h-[460px] rounded-xl border border-slate-200/70 bg-white p-5 sm:p-8 dark:border-slate-800 dark:bg-slate-900 overflow-y-auto flex flex-col">
+        <div className="relative h-[380px] rounded-xl border border-slate-200/70 bg-white p-4 sm:p-6 dark:border-slate-800 dark:bg-slate-900 overflow-y-auto flex flex-col">
           <div ref={contentRef} className="flex-1 space-y-4">
             
             {/* Contact Tab */}
@@ -184,7 +184,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     User Notes
                   </span>
-                  <div className="mt-2 rounded-lg bg-slate-50 p-4 text-sm text-slate-600 dark:bg-slate-950 dark:text-slate-300 font-sans border border-slate-100 dark:border-slate-800">
+                  <div className="mt-2 rounded-lg bg-slate-50 p-4 text-[13px] text-slate-600 dark:bg-slate-950 dark:text-slate-300 font-sans border border-slate-100 dark:border-slate-800">
                     {activeProfile.contactInput}
                   </div>
                 </div>
@@ -229,7 +229,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     Prompt
                   </span>
-                  <div className="mt-2 rounded-lg bg-slate-50 p-4 text-sm text-slate-600 dark:bg-slate-950 dark:text-slate-300 font-sans border border-slate-100 dark:border-slate-800">
+                  <div className="mt-2 rounded-lg bg-slate-50 p-4 text-[13px] text-slate-600 dark:bg-slate-950 dark:text-slate-300 font-sans border border-slate-100 dark:border-slate-800">
                     {activeProfile.composePrompt}
                   </div>
                 </div>
@@ -258,7 +258,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                       <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                         Subject
                       </span>
-                      <p className="mt-1 font-semibold text-primary dark:text-white text-base">
+                      <p className="mt-1 font-semibold text-primary dark:text-white text-[15px]">
                         <PlaceholderHighlighter text={activeProfile.composeSubject} />
                       </p>
                     </div>
@@ -266,7 +266,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                       <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2 block">
                         Generated Email
                       </span>
-                      <div className="mt-2 text-sm leading-relaxed text-slate-700 dark:text-slate-200 whitespace-pre-wrap font-sans bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-100 dark:border-slate-800/80">
+                      <div className="mt-2 text-[13px] leading-relaxed text-slate-700 dark:text-slate-200 whitespace-pre-wrap font-sans bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-100 dark:border-slate-800/80">
                         <PlaceholderHighlighter text={activeProfile.composeBody} />
                       </div>
                     </div>
@@ -282,7 +282,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     Rough Input Draft
                   </span>
-                  <div className="mt-2 rounded-lg bg-slate-50 p-4 text-sm text-slate-600 dark:bg-slate-950 dark:text-slate-300 font-sans border border-slate-100 dark:border-slate-800">
+                  <div className="mt-2 rounded-lg bg-slate-50 p-4 text-[13px] text-slate-600 dark:bg-slate-950 dark:text-slate-300 font-sans border border-slate-100 dark:border-slate-800">
                     <PlaceholderHighlighter text={activeProfile.improveOriginal} />
                   </div>
                 </div>
@@ -308,7 +308,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                     <span className="text-xs font-semibold uppercase tracking-wider text-sky-700 dark:text-sky-400 mb-2 block">
                       Improved Version ({activeProfile.tone})
                     </span>
-                    <div className="mt-2 text-sm font-medium leading-relaxed text-slate-800 dark:text-slate-100 whitespace-pre-wrap font-sans bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-100 dark:border-slate-800/80">
+                    <div className="mt-2 text-[13px] font-medium leading-relaxed text-slate-800 dark:text-slate-100 whitespace-pre-wrap font-sans bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-100 dark:border-slate-800/80">
                       <PlaceholderHighlighter text={activeProfile.improveResult} />
                     </div>
                   </div>
@@ -323,7 +323,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     Draft to Review
                   </span>
-                  <div className="mt-2 rounded-lg bg-slate-50 p-4 text-sm text-slate-600 dark:bg-slate-950 dark:text-slate-300 font-sans border border-slate-100 dark:border-slate-800">
+                  <div className="mt-2 rounded-lg bg-slate-50 p-4 text-[13px] text-slate-600 dark:bg-slate-950 dark:text-slate-300 font-sans border border-slate-100 dark:border-slate-800">
                     {activeProfile.reviewOriginal}
                   </div>
                 </div>
@@ -354,7 +354,7 @@ export default function InteractiveFeatureDemo({ feature }: { feature: "contact"
                         Ready to send
                       </span>
                     </div>
-                    <div className="text-sm leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-wrap font-sans bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-100 dark:border-slate-800/80">
+                    <div className="text-[13px] leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-wrap font-sans bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-100 dark:border-slate-800/80">
                       <PlaceholderHighlighter text={activeProfile.reviewResult} />
                     </div>
                   </div>
